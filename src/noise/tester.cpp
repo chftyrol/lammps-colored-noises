@@ -7,8 +7,8 @@ int main(int argc, char** argv)
 {
   const unsigned N = 500;
   const double mean = 0.;
-  const double stddev = 1.0e14;
-  const double alpha = 1.0;
+  const double stddev = 1.0;
+  const double alpha = 0.0;
   const unsigned seed = 58;
 
   ColoredNoise gen(mean, stddev, alpha, seed);

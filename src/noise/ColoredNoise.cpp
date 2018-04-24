@@ -1,11 +1,11 @@
 #include "ColoredNoise.h"
 
-ColoredNoise::ColoredNoise(double mean, double stddev, double alpha, unsigned seed, unsigned samplesize, int fft_flags)
-  : _mean(mean), _stddev(stddev), _alpha(alpha), _seed(seed), _samplesize(samplesize), _fft_flags(fft_flags)
+ColoredNoise::ColoredNoise(double mean, double stddev, double alpha, unsigned seed, unsigned samplesize)
+  : _mean(mean), _stddev(stddev), _alpha(alpha), _seed(seed), _samplesize(samplesize)
 {
-  _sample = new fftw_complex[_samplesize];
+  _sample = new double[_samplesize];
   _wngenerator = new WhiteNoise(_mean, _stddev, _seed);
-  _thefilter = new NoiseFilter(_alpha, _samplesize, _fft_flags);
+  _thefilter = new NoiseFilter(_alpha, _samplesize);
   _sampleit = 0;
   _generateSample();
 }
@@ -25,17 +25,17 @@ double ColoredNoise::operator()()
     _generateSample();
   }
   _sampleit++;
-  return _sample[_sampleit][1];
+  return _sample[_sampleit];
 }
 
 void ColoredNoise::_generateSample()
 {
+  double* whitenoise = new double[_samplesize];
   // Fill sample with whitenoise.
   for(unsigned k = 0; k < _samplesize; ++k)
-  {
-    _sample[k][0] = (*_wngenerator)();
-    _sample[k][1] = 0.;
-  }
+    whitenoise[k] = (*_wngenerator)();
   // Apply the colored noise filter.
-  _thefilter->filter(_sample, _sample);
+  _thefilter->filter(whitenoise, _sample);
+  // Free up memory occupied by whitenoise.
+  delete[] whitenoise;
 }

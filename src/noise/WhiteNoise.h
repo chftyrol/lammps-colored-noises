@@ -1,8 +1,9 @@
+#include <iostream>
 #include <random>
 #include <chrono>
 
-#ifndef __NOISEFILTER_H__
-#define __NOISEFILTER_H__
+#ifndef __WHITENOISE_H__
+#define __WHITENOISE_H__
 
 class WhiteNoise
 {
