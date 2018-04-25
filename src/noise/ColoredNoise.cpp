@@ -3,7 +3,7 @@
 ColoredNoise::ColoredNoise(double mean, double stddev, double alpha, unsigned seed, unsigned samplesize)
   : _mean(mean), _stddev(stddev), _alpha(alpha), _seed(seed), _samplesize(samplesize)
 {
-  _sample = new double[_samplesize];
+  _sample = new double[2 * _samplesize];
   _wngenerator = new WhiteNoise(_mean, _stddev, _seed);
   _thefilter = new NoiseFilter(_alpha, _samplesize);
   _sampleit = 0;
@@ -30,10 +30,12 @@ double ColoredNoise::operator()()
 
 void ColoredNoise::_generateSample()
 {
-  double* whitenoise = new double[_samplesize];
+  double* whitenoise = new double[2 * _samplesize];
   // Fill sample with whitenoise.
   for(unsigned k = 0; k < _samplesize; ++k)
     whitenoise[k] = (*_wngenerator)();
+  for(unsigned j = _samplesize; j < 2 * _samplesize; ++j)
+    whitenoise[j] = 0.;
   // Apply the colored noise filter.
   _thefilter->filter(whitenoise, _sample);
   // Free up memory occupied by whitenoise.
