@@ -34,6 +34,9 @@ void NoiseFilter::filter(double* in, double* out)
   }
   // Perform inverse DFT on the result.
   fftw_execute(backwardtransplan);
+  // Rescale output, to correct for unnormalized DFT
+  for(unsigned k = 0; k < _mem_re_size; ++k)
+    out[k] /= ( (double)_samplesize );
   // Free memory of the intermediate result in transformed space.
   delete[] transfin;
   // Delete DFT plans.
@@ -56,12 +59,6 @@ void NoiseFilter::_compute_response()
     realspaceResponse[j] = 0.;
   // Calculate the real dft of the response matrix.
   fftw_execute(forwardtransplan);
-  // Rescale output, to correct for unnormalized DFT
-  for(unsigned k = 0; k < _mem_fwtr_size; ++k)
-  {
-    _response[k][0] /= ((double)_samplesize);
-    _response[k][1] /= ((double)_samplesize);
-  }
   // Only keep the transformed space response matrix stored.
   fftw_destroy_plan(forwardtransplan);
   delete[] realspaceResponse;
