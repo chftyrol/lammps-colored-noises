@@ -14,7 +14,12 @@ int main(int argc, char** argv)
   // Parse args
   if(argc < 9)
   {
-    std::cerr << "Usage:\ntester.x -N <samplesize> -s <seed> -a <alpha>" << std::endl;
+    std::cerr << "Usage:  tester.x -N <samplesize> -s <seed> -a <alpha> -d <stddev>" << std::endl \
+              << "ARGS:" << std::endl \
+              << "    samplesize: an unsigned integer value, representing how many random numbers are going to make up the noise sample." << std::endl \
+              << "    seed: an unsigned integer value, representing the seed for the random number generator." << std::endl \
+              << "    alpha: a non-negative floating point number in the interval [0.0,2.0]. The exponent in (1/f)^alpha, specifying the color of the noise." << std::endl \
+              << "    stddev: A positive floating point number, specifying the standard deviation of the white noise used to make colored noise." << std::endl ;
     return 1;
   }
   else
