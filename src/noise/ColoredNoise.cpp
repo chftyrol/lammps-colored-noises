@@ -36,8 +36,16 @@ void ColoredNoise::_generateSample()
     whitenoise[k] = (*_wngenerator)();
   for(unsigned j = _samplesize; j < 2 * _samplesize; ++j)
     whitenoise[j] = 0.;
-  // Apply the colored noise filter.
-  _thefilter->filter(whitenoise, _sample);
-  // Free up memory occupied by whitenoise.
-  delete[] whitenoise;
+  if(_alpha == 0.0)
+  {
+    // No need to color the white noise.
+    _sample = whitenoise;
+  }
+  else
+  {
+    // Apply the colored noise filter.
+    _thefilter->filter(whitenoise, _sample);
+    // Free up memory occupied by whitenoise.
+    delete[] whitenoise;
+  }
 }
