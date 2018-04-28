@@ -4,3 +4,29 @@ In questa repository risiede il progetto del corso di Dinamica Molecolare. L'obi
 1. Scrivere delle classi aggiuntive per lammps che permettano di generare rumore colorato, al fine di produrre una dinamica stocastica.
 2. Produrre uno strumento in grado di analizzare le proprietà statistiche di tali rumori.
 3. Scrivere una interfaccia in Python che permetta di adoperare tali strumenti in simulazioni di vario tipo in maniera agile.
+
+## Generazione di rumore colorato
+Per la generazione di rumore colorato adoperiamo il seguente schema:
+
+1. La classe `WhiteNoise` genera del rumore bianco gaussiano: facendo uso della classe `std::normal_distribution` del C++11 si genera del rumore bianco, con media e deviazione standard specificate dall'utente. La media di questo rumore per la maggior parte delle applicazioni dev'essere pari a 0.
+2. Il rumore bianco così generato viene spedito attraverso un filtro colorato, implementato dalla classe `NoiseFilter`. Questa esegue in successione le seguenti operazioni:
+   - Calcolo della funzione risposta in spazio reale.
+   - Calcolo della DFT (discrete Fourier transform) della funzione risposta.
+   - Calcolo della DFT del segnale di input, ossia del rumore bianco.
+   - Applicazione al segnale di input della funzione risposta in spazio trasformato.
+   - Calcolo della DFT inversa per ottenere il segnale in output in spazio reale.
+
+La coordinazione tra `WhiteNoise` e `NoiseFilter` è implementata in `ColoredNoise`, che si occupa di dispensare i numeri casuali che costituiscono il rumore colorato desiderato.
+
+Il calcolo della funzione risposta e in generale l'algoritmo utilizzato da `NoiseFilter` è spiegato nel dettaglio su *Kasdin, N. (1995). Discrete Simulation of Colored Noise and Stochastic Processes and 1/f^alpha Power Law Noise Generation. Proceedings of the IEEE. 83. 802 - 827. 10.1109/5.381848.* 
+
+Nella pratica, un utente che desidera utilizzare questo generatore deve istanziare un oggetto di tipo `ColoredNoise` fornendo:
+
+- `samplesize`: le dimensioni del campione di rumore colorato;
+- `seed`: il seed per inizializzare `WhiteNoise`;
+- `stddev`: la deviazione standard del rumore bianco;
+- `mean`: il valor medio del rumore bianco;
+- `alpha`: parametro `double` che specifica il colore del rumore bianco. In particolare:
+  + `alpha = 0.0` dà rumore bianco
+  + `alpha = 1.0` dà rumore rosa
+  + `alpha = 2.0` dà rumore rosso
