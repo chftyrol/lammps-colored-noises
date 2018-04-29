@@ -5,7 +5,8 @@ ColoredNoise::ColoredNoise(double mean, double stddev, double alpha, unsigned se
 {
   _sample = new double[2 * _samplesize];
   _wngenerator = new WhiteNoise(_mean, _stddev, _seed);
-  _thefilter = new NoiseFilter(_alpha, _samplesize);
+  if(_alpha != 0.0)
+    _thefilter = new NoiseFilter(_alpha, _samplesize);
   _sampleit = 0;
   _generateSample();
 }
@@ -14,7 +15,8 @@ ColoredNoise::~ColoredNoise()
 {
   delete[] _sample;
   delete _wngenerator;
-  delete _thefilter;
+  if(_alpha != 0.0)
+    delete _thefilter;
 }
 
 double ColoredNoise::operator()()
