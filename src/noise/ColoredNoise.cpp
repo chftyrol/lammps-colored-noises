@@ -24,8 +24,7 @@ double ColoredNoise::operator()()
     _sampleit = 0;
     _generateSample();
   }
-  _sampleit++;
-  return _sample[_sampleit];
+  return _sample[_sampleit++];
 }
 
 void ColoredNoise::_generateSample()
