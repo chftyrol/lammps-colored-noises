@@ -18,8 +18,6 @@ Per la generazione di rumore colorato adoperiamo il seguente schema:
 
 La coordinazione tra `WhiteNoise` e `NoiseFilter` è implementata in `ColoredNoise`, che si occupa di dispensare i numeri casuali che costituiscono il rumore colorato desiderato.
 
-Il calcolo della funzione risposta e in generale l'algoritmo utilizzato da `NoiseFilter` è spiegato nel dettaglio su *Kasdin, N. (1995). Discrete Simulation of Colored Noise and Stochastic Processes and 1/f^alpha Power Law Noise Generation. Proceedings of the IEEE. 83. 802 - 827. 10.1109/5.381848.* 
-
 Nella pratica, un utente che desidera utilizzare questo generatore deve istanziare un oggetto di tipo `ColoredNoise` fornendo:
 
 - `samplesize`: le dimensioni del campione di rumore colorato;
@@ -30,3 +28,9 @@ Nella pratica, un utente che desidera utilizzare questo generatore deve istanzia
   + `alpha = 0.0` dà rumore bianco
   + `alpha = 1.0` dà rumore rosa
   + `alpha = 2.0` dà rumore rosso
+
+Il calcolo della funzione risposta e in generale l'algoritmo utilizzato da `NoiseFilter` è spiegato nel dettaglio su:
+
+- [N. J. Kasdin, "Discrete simulation of colored noise and stochastic processes and 1/f^α power law noise generation," in Proceedings of the IEEE, vol. 83, no. 5, pp. 802-827, May 1995.](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=381848&isnumber=8651)
+- [N. J. Kasdin and T. Walter, "Discrete simulation of power law noise (for oscillator stability evaluation)," Proceedings of the 1992 IEEE Frequency Control Symposium, Hershey, PA, 1992, pp. 274-283.](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=270003&isnumber=6712)
+
