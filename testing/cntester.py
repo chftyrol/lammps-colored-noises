@@ -1,20 +1,33 @@
 #!/usr/bin/python
 
-from sys import argv
+from argparse import ArgumentParser
 import cn_data_manage as di
 import cn_math as m
 import cn_multiprocs as mp
 
-# Il numero di campioni che ogni CPU processa
-# in media per ogni iterazione del loop principale
-samples_per_CPU = 3
-# Il numero di dati che costituiscono un campione
-sample_cardinality = 10000
+# Definisci il parser
+parser = ArgumentParser()
 
+# Aggiungi un argomento per specificare il nome del data file
+parser.add_argument("datafile", help = "a plain text file containing some\
+				samples of equal cardinality")
+# Aggiungi un argomento per specificare la cardinalità dei campioni
+parser.add_argument("samp_card", type=int,\
+		    help = "cardinality of samples in datafile")
+# Aggiungi un argomento per specificare il numero di campioni
+# che ogni CPU processa in media per ogni iterazione del loop principale
+parser.add_argument('samp_per_CPU', nargs='?', default=1, type=int,\
+		    help = "medium number of samples per CPU\
+		    per main loop iteration (default = 1)")
 
-# Leggi il nome del data file dal primo argomento
-# della linea di comando
-data_file = argv[1]
+# Parsa la linea di comando
+args = parser.parse_args()
+
+# Assegna gli argomenti selezionati dalla linea di comando
+# a delle variabili (per maggiore comodità).
+data_file = args.datafile
+sample_cardinality = args.samp_card
+samples_per_CPU = args.samp_per_CPU
 
 # Calcola il numero complessivo dei dati
 # contando le linee del data file
@@ -30,6 +43,7 @@ main_loop_iter = mp.get_main_loop_iter(data_file, data_number, data_per_iter)
 # delle deviazioni standard
 averages_list = []
 std_devs_list = []
+
 
 # Avvia il loop principale
 for index in range(0,main_loop_iter):
