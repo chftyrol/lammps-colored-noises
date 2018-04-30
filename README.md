@@ -34,3 +34,11 @@ Il calcolo della funzione risposta e in generale l'algoritmo utilizzato da `Nois
 - [N. J. Kasdin, "Discrete simulation of colored noise and stochastic processes and 1/f^α power law noise generation," in Proceedings of the IEEE, vol. 83, no. 5, pp. 802-827, May 1995.](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=381848&isnumber=8651)
 - [N. J. Kasdin and T. Walter, "Discrete simulation of power law noise (for oscillator stability evaluation)," Proceedings of the 1992 IEEE Frequency Control Symposium, Hershey, PA, 1992, pp. 274-283.](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=270003&isnumber=6712)
 
+## Analisi dei rumori colorati
+L'analisi dei rumori colorati, generati attraverso il precedente schema, è possibile grazie alo script di Python `cntester.py`, presente in `/testing`.
+
+### Dipendenze
+`cntester.py` fa uso unicamente di moduli di Python build-in (e dei moduli presenti nel progetto), tuttavia è necessario l'utilizzo di una versione del linguaggio **>=3.0.0**.
+
+### Utilizzo
+`./cntester.py test_data.txt`.
