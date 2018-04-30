@@ -41,4 +41,12 @@ L'analisi dei rumori colorati, generati attraverso il precedente schema, è poss
 `cntester.py` fa uso unicamente di moduli di Python build-in (e dei moduli presenti nel progetto), tuttavia è necessario l'utilizzo di una versione del linguaggio **>=3.0.0**.
 
 ### Utilizzo
-`./cntester.py test_data.txt`.
+`./cntester --help`.
+
+#### Esempio:
+Si può testare il funzionamento di cntester mediante il file di dati `/testing/test_data.txt.xz`.
+
+##### Istruzioni:
+1. `cd $PERCORSO_REPO_GIT/testing`
+2. `xz -d test_data.txt.xz` (è necessario installare il pacchetto "XZ Utils" o simili)
+3. `./cntester test_data.txt 10000 4`
