@@ -14,13 +14,16 @@ parser = ArgumentParser(description="Python script to test noise\
 parser.add_argument("datafile", help = "a plain text file containing some\
 				samples of equal cardinality")
 # Aggiungi un argomento per specificare la cardinalità dei campioni
-parser.add_argument("samp_card", type=int,\
-		    help = "cardinality of samples in datafile")
+parser.add_argument("samp_card", type=m.check_positive_int,\
+		    help = "a positive integer representing the\
+		    cardinality of samples in datafile")
 # Aggiungi un argomento per specificare il numero di campioni
 # che ogni CPU processa in media per ogni iterazione del loop principale
-parser.add_argument('samp_per_CPU', nargs='?', default=1, type=int,\
-		    help = "medium number of samples per CPU\
-		    per main loop iteration (default = 1)")
+parser.add_argument('samp_per_CPU', nargs='?', default=1,\
+		    type=m.check_positive_int,\
+		    help = "a positive integer representing the medium\
+		    number of samples per CPU per main loop iteration\
+		    (default = 1)")
 parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.1')
 
 # Parsa la linea di comando
