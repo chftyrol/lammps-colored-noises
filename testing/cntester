@@ -6,7 +6,9 @@ import cn_math as m
 import cn_multiprocs as mp
 
 # Definisci il parser
-parser = ArgumentParser()
+parser = ArgumentParser(description="Python script to test noise\
+				     generation capabilities of\
+				     tester.x executable")
 
 # Aggiungi un argomento per specificare il nome del data file
 parser.add_argument("datafile", help = "a plain text file containing some\
@@ -19,6 +21,7 @@ parser.add_argument("samp_card", type=int,\
 parser.add_argument('samp_per_CPU', nargs='?', default=1, type=int,\
 		    help = "medium number of samples per CPU\
 		    per main loop iteration (default = 1)")
+parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.1')
 
 # Parsa la linea di comando
 args = parser.parse_args()
