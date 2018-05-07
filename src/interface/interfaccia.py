@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 #here to insert python3 interpreter path
+
 #from __future__ import print_function
 import sys #modulo che gestisce l'interazione fra variabili passate e l'interprete
 import argparse
@@ -30,17 +31,26 @@ parser.add_argument('--zz', action='store', default=20, type=int,\
 
 parser.add_argument('--thermo', action='store', default=10, type=int, \
                     help='passa ogni quante simulazioni printare la termodinamica del mio sistema, un int che ha valore 10 di default')
+
+#parser.add_argument('--lj', action='append', default=lj , type=int,
+#help='passa ogni quante simulazioni printare la termodinamica del mio sistema, un int che ha valore 10 di default')
 #['rock', 'paper', 'scissors']
 parser.add_argument('pot', choices=['yukawa'],  \
                     help='passa il tipo di potenziale da accoppiare a lj')
 
-parser.add_argument('pot_coeff', action= 'append',type=float,nargs='+', help='passa i coefficienti richiesti dal potenziale')
+parser.add_argument('pot_coeff', action= 'append',type=float,nargs='+', help='passa i coefficienti richiesti dal potenziale: *)per yukawa sono screening_length, global_cutoff, A (energy*distance units), cutoff(locale, di quel preciso accoppiamento)')
 
 
-parser.add_argument('--if_dump', action='store_true')
+parser.add_argument('--if_dump_atom', action='store_true')
 
-parser.add_argument('--dump', action='store', default=10, type=int, \
+parser.add_argument('--dump_atom', action='store', default=10, type=int, \
                     help='passa ogni quante simulazioni salvare uno snapshot del sistema di atomi, un int che ha valore 10 di default')
+
+parser.add_argument('--if_dump_coord', action='store_true')
+
+parser.add_argument('--dump_coord', action='store', default=99, type=int, \
+                    help='passa ogni quante simulazioni salvare uno snapshot delle coordinate degli atomi, un int che ha valore 100 di default')
+
 
 args = parser.parse_args()
 #NB:: per il potenziale: usare choices
@@ -91,14 +101,18 @@ while True:
         lmp.command("velocity    all create 1.44 87287 loop geom")
 
 #Definisco il tipo di potenziale e cutoff
-        lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s 2.0 2.5 " % (args.pot))
-
+#pair_style yukawa kappa=screening_length cutoff=global_cutoff_for_Yukawa_interactions
+        if args.pot == 'yukawa':
+            try:
+                lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0][0],args.pot_coeff[0][1]))
+#default yukawa 2.0 2.5
 #Definisco i coeff dell'interazione fra i vari tipi di atomi
-        lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interazione 1 1 con epsilon, sigma e cutoff passati
-        #print(args.pot_coeff[0][0])
-        #print(float(args.pot_coeff[0]))
-        lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[0][0],args.pot_coeff[0][1]))
+                lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interazione 1 1 con epsilon, sigma e cutoff passati
+
+                lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[0][2],args.pot_coeff[0][3]))
 #default yukawa 100.0 2.3
+            except IndexError:
+                sys.exit("IndexError: not enough coefficients for potential definition. Stopping lammps setting..program quit")
 #Come si costruisce la lista dei primi vicini
 #This command sets parameters that affect the building of pairwise neighbor lists;
 #All atom pairs within a neighbor cutoff distance equal to the their force cutoff plus
@@ -119,8 +133,11 @@ while True:
     elif n == 110:
         sys.exit("Stopping lammps setting..program quit")
 #SE dico allo script di farlo, salva gli snapshot della simulazione zippati (meno pesanti di quelli di default, ma leggermente più lenti ad aprirsi) ogni tot passi
-if args.if_dump == True:
-    lmp.command("dump myDump all atom %i dump.*.gz" % (args.dump))
+if args.if_dump_atom == True:
+    lmp.command("dump myDump all atom %i dump_atom.*.gz" % (args.dump_atom))
+
+if args.if_dump_coord == True:
+    lmp.command("dump myDump2 all xyz %i dump_coordinates.*" % (args.dump_coord))
 
 while True:
     n=ord(input("Continue by running the simulation? [y/n]"))
@@ -129,4 +146,5 @@ while True:
         break
     elif n == 110:
         sys.exit("Stopping the simulation..program quit")
+
 
