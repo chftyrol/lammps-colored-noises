@@ -30,6 +30,12 @@ parser.add_argument('--zz', action='store', default=20, type=int,\
 
 parser.add_argument('--thermo', action='store', default=10, type=int, \
                     help='passa ogni quante simulazioni printare la termodinamica del mio sistema, un int che ha valore 10 di default')
+#['rock', 'paper', 'scissors']
+parser.add_argument('pot', choices=['yukawa'],  \
+                    help='passa il tipo di potenziale da accoppiare a lj')
+
+parser.add_argument('pot_coeff', action= 'append',type=float,nargs='+', help='passa i coefficienti richiesti dal potenziale')
+
 
 parser.add_argument('--if_dump', action='store_true')
 
@@ -85,13 +91,14 @@ while True:
         lmp.command("velocity    all create 1.44 87287 loop geom")
 
 #Definisco il tipo di potenziale e cutoff
-        lmp.command("pair_style hybrid/overlay lj/cut 2.5 yukawa 2.0 2.5 ")
+        lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s 2.0 2.5 " % (args.pot))
 
 #Definisco i coeff dell'interazione fra i vari tipi di atomi
         lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interazione 1 1 con epsilon, sigma e cutoff passati
-
-        lmp.command("pair_coeff * * yukawa 100.0 2.3")
-
+        #print(args.pot_coeff[0][0])
+        #print(float(args.pot_coeff[0]))
+        lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[0][0],args.pot_coeff[0][1]))
+#default yukawa 100.0 2.3
 #Come si costruisce la lista dei primi vicini
 #This command sets parameters that affect the building of pairwise neighbor lists;
 #All atom pairs within a neighbor cutoff distance equal to the their force cutoff plus
@@ -122,3 +129,4 @@ while True:
         break
     elif n == 110:
         sys.exit("Stopping the simulation..program quit")
+
