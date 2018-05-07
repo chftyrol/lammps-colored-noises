@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 #here to insert python3 interpreter path
 #from __future__ import print_function
-#import sys #modulo che gestisce l'interazione fra variabili passate e l'interprete
+import sys #modulo che gestisce l'interazione fra variabili passate e l'interprete
 import argparse
 
 from lammps import lammps
@@ -39,38 +39,42 @@ parser.add_argument('--dump', action='store', default=10, type=int, \
 args = parser.parse_args()
 #NB:: per il potenziale: usare choices
 
-#Istanzio un oggetto di tipo lammps
-lmp = lammps()
+print("Arguments parsed correctly.")
+
+while True:
+    n=ord(input("Continue by setting the system by lammps? [y/n]"))
+    if n == 121:
+        lmp = lammps()
 
 #Genero le variabili che andranno a definirmi la mia regione
 #Variables of style 'equal' store a formula which when evaluated produces a single numeric value which can be output
-lmp.command("variable    xx equal %i" % (args.xx))
-lmp.command("variable    yy equal %i" % (args.yy))
-lmp.command("variable    zz equal %i" % (args.zz))
+        lmp.command("variable    xx equal %i" % (args.xx))
+        lmp.command("variable    yy equal %i" % (args.yy))
+        lmp.command("variable    zz equal %i" % (args.zz))
 
 #Decido il sistema di unità di misura della grandezze che manipolo
 #For style lj, all quantities are unitless.
 #Without loss of generality, LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.
-lmp.command("units        lj")
+        lmp.command("units        lj")
 
 #Definisco il tipo di atomi
-lmp.command("atom_style    atomic") #atom_style style args
+        lmp.command("atom_style    atomic") #atom_style style args
 
 #Genero il mio reticolo fcc con passo 0.8422
-lmp.command("lattice        fcc 0.8442")    #lattice style scale keyword values
+        lmp.command("lattice        fcc 0.8442")    #lattice style scale keyword values
 
 #Genero la regione della simulazione, lammps applicherà le giuste condizioni al contorno
-lmp.command("region        scatola block 0 ${xx} 0 ${yy} 0 ${zz}")
+        lmp.command("region        scatola block 0 ${xx} 0 ${yy} 0 ${zz}")
 
 #Creo la scatola e che atomi metterci dentro
-lmp.command("create_box    1 scatola") #create_box N-type_atoms region-ID keyword value
+        lmp.command("create_box    1 scatola") #create_box N-type_atoms region-ID keyword value
 
 #Creo gli atomi nella scatola
 #create_atoms command creates atoms on the lattice points inside the simulation box;For the box style, the create_atoms command fills the entire simulation box with particles on the lattice.
-lmp.command("create_atoms    1 box")
+        lmp.command("create_atoms    1 box")
 
 #Assegno la massa a un dato tipo di atomi
-lmp.command("mass        1 %f" % (args.mass) )
+        lmp.command("mass        1 %f" % (args.mass) )
 
 #Genero le velocità
 
@@ -78,32 +82,43 @@ lmp.command("mass        1 %f" % (args.mass) )
 #If loop = geom, then each processor loops over only its atoms.
 #For each atom a unique random number seed is created, based on the atom’s xyz coordinates.
 #A velocity is generated using that seed.
-lmp.command("velocity    all create 1.44 87287 loop geom")
+        lmp.command("velocity    all create 1.44 87287 loop geom")
 
 #Definisco il tipo di potenziale e cutoff
-lmp.command("pair_style    lj/cut 2.5")
+        lmp.command("pair_style hybrid/overlay lj/cut 2.5 yukawa 2.0 2.5 ")
 
 #Definisco i coeff dell'interazione fra i vari tipi di atomi
-lmp.command("pair_coeff    1 1 1.0 1.0 2.5") #interazione 1 1 con epsilon, sigma e cutoff passati
+        lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interazione 1 1 con epsilon, sigma e cutoff passati
+
+        lmp.command("pair_coeff * * yukawa 100.0 2.3")
 
 #Come si costruisce la lista dei primi vicini
 #This command sets parameters that affect the building of pairwise neighbor lists;
 #All atom pairs within a neighbor cutoff distance equal to the their force cutoff plus
 #the skin distance are stored in the list
 #bin è la modalità di creare la lista di primi vicini
-lmp.command("neighbor    0.3 bin") #neighbor skin style
+        lmp.command("neighbor    0.3 bin") #neighbor skin style
 
 
-lmp.command("neigh_modify    delay 0 every 20 check no")
+        lmp.command("neigh_modify    delay 0 every 20 check no")
 
 #Definisco il tipo di integratore temporale
-lmp.command("fix        1 all nve") #fix <nome_del_fix> <gruppo_di_atomi> <cosa_fixiamo>
+        lmp.command("fix        1 all nve") #fix <nome_del_fix> <gruppo_di_atomi> <cosa_fixiamo>
 
 #Printa la termodinamica del sistema ogni tot passi
-lmp.command("thermo          %i" % (args.thermo))
-
+        lmp.command("thermo          %i" % (args.thermo))
+        print("System set correctly.")
+        break
+    elif n == 110:
+        sys.exit("Stopping lammps setting..program quit")
 #SE dico allo script di farlo, salva gli snapshot della simulazione zippati (meno pesanti di quelli di default, ma leggermente più lenti ad aprirsi) ogni tot passi
 if args.if_dump == True:
     lmp.command("dump myDump all atom %i dump.*.gz" % (args.dump))
 
-lmp.command("run       %i" % (args.step)) #i perche è un int
+while True:
+    n=ord(input("Continue by running the simulation? [y/n]"))
+    if n == 121:
+        lmp.command("run       %i" % (args.step)) #i perche è un int
+        break
+    elif n == 110:
+        sys.exit("Stopping the simulation..program quit")
