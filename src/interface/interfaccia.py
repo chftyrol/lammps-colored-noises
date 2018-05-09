@@ -32,8 +32,7 @@ parser.add_argument('--zz', action='store', default=20, type=int,\
 parser.add_argument('--thermo', action='store', default=10, type=int, \
                     help='passa ogni quante simulazioni printare la termodinamica del mio sistema, un int che ha valore 10 di default')
 
-#parser.add_argument('--lj', action='append', default=lj , type=int,
-#help='passa ogni quante simulazioni printare la termodinamica del mio sistema, un int che ha valore 10 di default')
+
 #['rock', 'paper', 'scissors']
 parser.add_argument('pot', choices=['yukawa'],  \
                     help='passa il tipo di potenziale da accoppiare a lj')
@@ -46,10 +45,10 @@ parser.add_argument('--if_dump_atom', action='store_true')
 parser.add_argument('--dump_atom', action='store', default=10, type=int, \
                     help='passa ogni quante simulazioni salvare uno snapshot del sistema di atomi, un int che ha valore 10 di default')
 
-parser.add_argument('--if_dump_coord', action='store_true')
+parser.add_argument('--if_dump_speed', action='store_true')
 
-parser.add_argument('--dump_coord', action='store', default=99, type=int, \
-                    help='passa ogni quante simulazioni salvare uno snapshot delle coordinate degli atomi, un int che ha valore 100 di default')
+parser.add_argument('--dump_speed', action='store', default=99, type=int, \
+                    help='passa ogni quante simulazioni salvare uno snapshot delle velocità degli atomi, un int che ha valore 100 di default')
 
 
 args = parser.parse_args()
@@ -136,8 +135,8 @@ while True:
 if args.if_dump_atom == True:
     lmp.command("dump myDump all atom %i dump_atom.*.gz" % (args.dump_atom))
 
-if args.if_dump_coord == True:
-    lmp.command("dump myDump2 all xyz %i dump_coordinates.*" % (args.dump_coord))
+if args.if_dump_speed == True:
+    lmp.command("dump myDump2 all custom %i dump_speed.* vx vy vz" % (args.dump_speed))
 
 while True:
     n=ord(input("Continue by running the simulation? [y/n]"))
