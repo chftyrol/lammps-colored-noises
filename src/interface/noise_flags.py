@@ -1,8 +1,12 @@
 import argparse
 
-def configure(parser):
+def configure():
 
+#Parser per le flags
 
+#The ArgumentParser object will hold all the information necessary to parse the command line into Python data types.
+    parser = argparse.ArgumentParser(description='Python script interface able to generate\
+                                 lj+colored noise simulations',prefix_chars= '-')
 #Creo le flags
     parser.add_argument('--step', action='store', default=100, type=int, \
                     help='passa il numero di simulazioni, un int che ha valore 100 di default') #optional argument
@@ -40,6 +44,6 @@ def configure(parser):
     parser.add_argument('--dump_speed', action='store', default=99, type=int, \
                     help='passa ogni quante simulazioni salvare uno snapshot delle velocità degli atomi, un int che ha valore 100 di default')
 
-
+    return parser
 
 #NB:: per il potenziale: usare choices
