@@ -28,11 +28,11 @@ def configure():
 
 
 #['rock', 'paper', 'scissors']
-    parser.add_argument('pot', choices=['yukawa'],  \
+    parser.add_argument('--pot', choices=['yukawa'], default='yukawa',  \
                     help='passa il tipo di potenziale da accoppiare a lj')
 
-    parser.add_argument('pot_coeff', action= 'append',type=float,nargs='+', help='passa i coefficienti richiesti dal potenziale: *)per yukawa sono screening_length, global_cutoff, A (energy*distance units), cutoff(locale, di quel preciso accoppiamento)')
-
+    parser.add_argument('--pot_coeff', action= 'append',type=float,nargs='+',default=[2.0, 2.5 , 100.0, 2.3],  help='passa i coefficienti richiesti dal potenziale: *)per yukawa sono screening_length, global_cutoff, A (energy*distance units), cutoff(locale, di quel preciso accoppiamento)')
+    
 
     parser.add_argument('--if_dump_atom', action='store_true')
 
@@ -43,6 +43,7 @@ def configure():
 
     parser.add_argument('--dump_speed', action='store', default=99, type=int, \
                     help='passa ogni quante simulazioni salvare uno snapshot delle velocità degli atomi, un int che ha valore 100 di default')
+    
 
     return parser
 

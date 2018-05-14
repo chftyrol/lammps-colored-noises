@@ -1,5 +1,6 @@
 from lammps import lammps
 import sys
+import os
 
 def configure(args):
     lmp = lammps()
@@ -10,18 +11,19 @@ def configure(args):
     lmp.command("variable    yy equal %i" % (args.yy))
     lmp.command("variable    zz equal %i" % (args.zz))
     
+    
     #Decido il sistema di unità di misura della grandezze che manipolo
     #For style lj, all quantities are unitless.
     #Without loss of generality, LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.
     lmp.command("units        lj")
-        
-        #Definisco il tipo di atomi
+    
+    #Definisco il tipo di atomi
     lmp.command("atom_style    atomic") #atom_style style args
-        
-        #Genero il mio reticolo fcc con passo 0.8422
+    
+    #Genero il mio reticolo fcc con passo 0.8422
     lmp.command("lattice        fcc 0.8442")    #lattice style scale keyword values
-        
-        #Genero la regione della simulazione, lammps applicherà le giuste condizioni al contorno
+    
+    #Genero la regione della simulazione, lammps applicherà le giuste condizioni al contorno
     lmp.command("region        scatola block 0 ${xx} 0 ${yy} 0 ${zz}")
         
         #Creo la scatola e che atomi metterci dentro
@@ -33,6 +35,7 @@ def configure(args):
         
         #Assegno la massa a un dato tipo di atomi
     lmp.command("mass        1 %f" % (args.mass) )
+    
         
         #Genero le velocità
         
@@ -41,17 +44,19 @@ def configure(args):
         #For each atom a unique random number seed is created, based on the atom’s xyz coordinates.
         #A velocity is generated using that seed.
     lmp.command("velocity    all create 1.44 87287 loop geom")
+    
         
         #Definisco il tipo di potenziale e cutoff
         #pair_style yukawa kappa=screening_length cutoff=global_cutoff_for_Yukawa_interactions
     if args.pot == 'yukawa':
         try:
-            lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0][0],args.pot_coeff[0][1]))
+            lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0],args.pot_coeff[1]))
                 #default yukawa 2.0 2.5
                 #Definisco i coeff dell'interazione fra i vari tipi di atomi
             lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interazione 1 1 con epsilon, sigma e cutoff passati
-                
-            lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[0][2],args.pot_coeff[0][3]))
+            
+            lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[2],args.pot_coeff[3]))
+        
             #default yukawa 100.0 2.3
         except IndexError:
             sys.exit("IndexError: not enough coefficients for potential definition. Stopping lammps setting..program quit")
@@ -61,13 +66,34 @@ def configure(args):
     #the skin distance are stored in the list
     #bin è la modalità di creare la lista di primi vicini
     lmp.command("neighbor    0.3 bin") #neighbor skin style
+    
         
         
     lmp.command("neigh_modify    delay 0 every 20 check no")
+    
         
         #Definisco il tipo di integratore temporale
     lmp.command("fix        1 all nve") #fix <nome_del_fix> <gruppo_di_atomi> <cosa_fixiamo>
+    
         
         #Printa la termodinamica del sistema ogni tot passi
     lmp.command("thermo          %i" % (args.thermo))
+
+    os.system('clear')
+    
+    print("Lammps is set with a box of simulation of " + str(args.xx) + " length units along the x-axys." )
+    print("Lammps is set with a box of simulation of " + str(args.yy) + " length units along the y-axys." )
+    print("Lammps is set with a box of simulation of " + str(args.zz) + " length units along the z-axys." )
+    print("The units are set to be adimensional and rescaled.")
+    print("The particles are set to be atoms.")
+    print("The lattice is set to be an fcc with a step of 0.8442 length units.")
+    print("The particles are set to have a mass equal to" + str(args.mass) + ".")
+    print("Velocities are set. DA SCRIVERE MEGLIO")
+    print("Lj potential between particles is set with epsilon=1.0, sigma=1.0, cutoff=2.5")
+    print(args.pot + "potential is set with coefficients: " + str(args.pot_coeff[0]) + ", " + str(args.pot_coeff[1]) + ", " + str(args.pot_coeff[2]) + ", " + str(args.pot_coeff[3]) + "." )
+
+    print("The neighbor list has been built with the command: neighbor    0.3 bin")
+    print("PRINT PER DEFINIZIONE DELLE MODIFICHE AI PRIMI VICINI")
+    print("PRINT PER DEFINIZIONE DELL'INTEGRATORE")
+    print("Lammps will print the thermodynamics of the system every " + str(args.thermo) + " steps.")
     return lmp

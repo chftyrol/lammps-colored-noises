@@ -2,7 +2,7 @@
 #here to insert python3 interpreter path
 
 #from __future__ import print_function
-#import sys #modulo che gestisce l'interazione fra variabili passate e l'interprete
+import sys #modulo che gestisce l'interazione fra variabili passate e l'interprete
 import argparse
 import noise_flags
 import lmp_config
@@ -12,6 +12,9 @@ from lammps import lammps
 parser = noise_flags.configure()
 
 args = parser.parse_args()
+
+#if args.pot_coeff == None :
+#   args.pot_coeff[0]=[2.0, 2.5 , 100.0, 2.3 ]
 
 print("Arguments parsed correctly.")
 
@@ -31,6 +34,7 @@ if args.if_dump_atom == True:
 #idem ma solo sulle componenti delle velocità
 if args.if_dump_speed == True:
     lmp.command("dump myDump2 all custom %i dump_speed.* vx vy vz" % (args.dump_speed))
+
 
 while True:
     n=ord(input("Continue by running the simulation? [y/n]"))
