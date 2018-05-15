@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
 #here to insert python3 interpreter path
 
-#from __future__ import print_function
 import sys
 import argparse
 import noise_flags

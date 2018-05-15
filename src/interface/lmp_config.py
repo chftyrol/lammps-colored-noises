@@ -49,7 +49,12 @@ def configure(args):
     #For each atom a unique random number seed is created, based on the atom’s\
     #xyz coordinates.
     #A velocity is generated using that seed.
-    lmp.command("velocity    all create 1.44 87287 loop geom")
+    # This is a fast loop and the velocity assigned to a particular atom will be the same, independent of how many processors are used. However, the set of generated velocities may be more correlated than if the all or local keywords are used.
+    
+    #lmp.command("velocity    all create 1.44 87287 loop geom")
+    lmp.command("velocity    all set 0 0 0")
+    
+    
     
         
     #Define the potential
