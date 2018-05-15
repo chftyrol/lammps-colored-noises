@@ -5,62 +5,68 @@ import os
 def configure(args):
     lmp = lammps()
     
-    #Genero le variabili che andranno a definirmi la mia regione
-    #Variables of style 'equal' store a formula which when evaluated produces a single numeric value which can be output
+    #Set variables which will define my region of simulation
+    #Variables of style 'equal' store a formula which when evaluated \
+    #produces a single numeric value which can be output
     lmp.command("variable    xx equal %i" % (args.xx))
     lmp.command("variable    yy equal %i" % (args.yy))
     lmp.command("variable    zz equal %i" % (args.zz))
     
     
-    #Decido il sistema di unità di misura della grandezze che manipolo
+    #Set the unit type
     #For style lj, all quantities are unitless.
-    #Without loss of generality, LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.
+    #Without loss of generality, LAMMPS sets the fundamental \
+    #quantities mass, sigma, epsilon, and the Boltzmann constant = 1.
     lmp.command("units        lj")
     
-    #Definisco il tipo di atomi
+    #Define atom type
     lmp.command("atom_style    atomic") #atom_style style args
     
-    #Genero il mio reticolo fcc con passo 0.8422
+    #Generate my lattice of type fcc and step 0.8442
     lmp.command("lattice        fcc 0.8442")    #lattice style scale keyword values
     
-    #Genero la regione della simulazione, lammps applicherà le giuste condizioni al contorno
+    #Generate my simulation box
     lmp.command("region        scatola block 0 ${xx} 0 ${yy} 0 ${zz}")
         
-        #Creo la scatola e che atomi metterci dentro
+    #Create the box
     lmp.command("create_box    1 scatola") #create_box N-type_atoms region-ID keyword value
         
-        #Creo gli atomi nella scatola
-        #create_atoms command creates atoms on the lattice points inside the simulation box;For the box style, the create_atoms command fills the entire simulation box with particles on the lattice.
+    #Create the atoms in the box
+    #create_atoms command creates atoms on the lattice points inside the simulation\
+    #box;For the box style, the create_atoms command fills the entire simulation box\
+    #with particles on the lattice.
     lmp.command("create_atoms    1 box")
         
-        #Assegno la massa a un dato tipo di atomi
+    #Set the adimensional mass to the atoms
     lmp.command("mass        1 %f" % (args.mass) )
     
         
-        #Genero le velocità
+    #Set speed to particles
         
-        #The create style generates an ensemble of velocities using a random number generator with the specified temperature amd the specified seed.
-        #If loop = geom, then each processor loops over only its atoms.
-        #For each atom a unique random number seed is created, based on the atom’s xyz coordinates.
-        #A velocity is generated using that seed.
+    #The create style generates an ensemble of velocities using a random number\
+    #generator with the specified temperature and the specified seed.
+    #If loop = geom, then each processor loops over only its atoms.
+    #For each atom a unique random number seed is created, based on the atom’s\
+    #xyz coordinates.
+    #A velocity is generated using that seed.
     lmp.command("velocity    all create 1.44 87287 loop geom")
     
         
-        #Definisco il tipo di potenziale e cutoff
-        #pair_style yukawa kappa=screening_length cutoff=global_cutoff_for_Yukawa_interactions
+    #Define the potential
+    #pair_style yukawa kappa=screening_length cutoff=global_cutoff_for_Yukawa_interactions
     if args.pot == 'yukawa':
         try:
             lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0],args.pot_coeff[1]))
-                #default yukawa 2.0 2.5
-                #Definisco i coeff dell'interazione fra i vari tipi di atomi
-            lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interazione 1 1 con epsilon, sigma e cutoff passati
+            #default yukawa 2.0 2.5
+            #Define coeff of the interaction between different type of atoms
+            lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interaction 1 1 with epsilon, sigma e cutoff passed
             
             lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[2],args.pot_coeff[3]))
         
             #default yukawa 100.0 2.3
         except IndexError:
             sys.exit("IndexError: not enough coefficients for potential definition. Stopping lammps setting..program quit")
-    #Come si costruisce la lista dei primi vicini
+    #How to build neighbour build
     #This command sets parameters that affect the building of pairwise neighbor lists;
     #All atom pairs within a neighbor cutoff distance equal to the their force cutoff plus
     #the skin distance are stored in the list
@@ -72,19 +78,23 @@ def configure(args):
     lmp.command("neigh_modify    delay 0 every 20 check no")
     
         
-        #Definisco il tipo di integratore temporale
-    lmp.command("fix        1 all nve") #fix <nome_del_fix> <gruppo_di_atomi> <cosa_fixiamo>
+    #Define type of temporal integration
+    lmp.command("fix        1 all nve") #fix <fix_name> <atom_group> <what_fixed>
     
         
-        #Printa la termodinamica del sistema ogni tot passi
+    #print the thermodynamics of the system every args.thermo steps.
     lmp.command("thermo          %i" % (args.thermo))
 
+
+    #clear shell
     os.system('clear')
-    
+   
+    #outputs about lammps status
+    print("The units are set to be adimensional and rescaled. LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.")
     print("Lammps is set with a box of simulation of " + str(args.xx) + " length units along the x-axys." )
     print("Lammps is set with a box of simulation of " + str(args.yy) + " length units along the y-axys." )
     print("Lammps is set with a box of simulation of " + str(args.zz) + " length units along the z-axys." )
-    print("The units are set to be adimensional and rescaled.")
+
     print("The particles are set to be atoms.")
     print("The lattice is set to be an fcc with a step of 0.8442 length units.")
     print("The particles are set to have a mass equal to" + str(args.mass) + ".")

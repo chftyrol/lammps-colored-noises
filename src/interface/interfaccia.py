@@ -2,36 +2,36 @@
 #here to insert python3 interpreter path
 
 #from __future__ import print_function
-import sys #modulo che gestisce l'interazione fra variabili passate e l'interprete
+import sys
 import argparse
 import noise_flags
 import lmp_config
 
+#import the dynamical library from the shared object
 from lammps import lammps
 
+#parse all the flags by using the module argparse
 parser = noise_flags.configure()
 
 args = parser.parse_args()
-
-#if args.pot_coeff == None :
-#   args.pot_coeff[0]=[2.0, 2.5 , 100.0, 2.3 ]
 
 print("Arguments parsed correctly.")
 
 while True:
     n=ord(input("Continue by setting the system by lammps? [y/n]"))
     if n == 121:
+        #config the experiment using the flags
         lmp = lmp_config.configure(args)
         print("System set correctly.")
         break
     elif n == 110:
         sys.exit("Stopping lammps setting..program quit")
 
-#SE dico allo script di farlo, salva gli snapshot della simulazione zippati (meno pesanti di quelli di default, ma leggermente più lenti ad aprirsi per Ovito) ogni tot passi
+#if passed the right flag, lammps saves determined data in external files
 if args.if_dump_atom == True:
     lmp.command("dump myDump all atom %i dump_atom.*.gz" % (args.dump_atom))
 
-#idem ma solo sulle componenti delle velocità
+#here saves particle speed
 if args.if_dump_speed == True:
     lmp.command("dump myDump2 all custom %i dump_speed.* vx vy vz" % (args.dump_speed))
 
@@ -39,6 +39,7 @@ if args.if_dump_speed == True:
 while True:
     n=ord(input("Continue by running the simulation? [y/n]"))
     if n == 121:
+        #command for running the simulation args.step times.
         lmp.command("run       %i" % (args.step)) #i perche è un int
         break
     elif n == 110:
