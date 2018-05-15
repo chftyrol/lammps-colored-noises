@@ -23,8 +23,8 @@ def configure():
     parser.add_argument('--zz', action='store', default=20, type=int,\
                     help='pass the region length along the z-axys, an int with a default value of 20')
 
-    parser.add_argument('--thermo', action='store', default=10, type=int, \
-                    help='print the thermodynamics of the system every args.thermo steps, an int with a default value of 20.')
+    parser.add_argument('--thermo', action='store', default=100, type=int, \
+                    help='print the thermodynamics of the system every args.thermo steps, an int with a default value of 100.')
 
     parser.add_argument('--pot', choices=['yukawa'], default='yukawa',  \
                     help='pass the potential type pairing with the lj one, s str type with \'yukawa\' as default str. Moreover, the potential type must be in the choices of this flag.')
