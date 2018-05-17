@@ -3,7 +3,16 @@ import sys
 import os
 
 def configure(args):
+#from lammps import lammps + lmp = lammps() :
+#create an instance of LAMMPS, wrapped in a Python class by the lammps Python module, and return an instance of the Python class as lmp. It is used to make all subsequent calls to the LAMMPS library.
+
     lmp = lammps()
+    
+    if args.s == True:
+        lmp.command("log none")
+    
+    print(dir(lmp))
+    print(dir(lmp.commands_list))
     
     #Set variables which will define my region of simulation
     #Variables of style 'equal' store a formula which when evaluated \
@@ -86,6 +95,9 @@ def configure(args):
     #Define type of temporal integration
     lmp.command("fix        1 all nve") #fix <fix_name> <atom_group> <what_fixed>
     
+
+    
+    
         
     #print the thermodynamics of the system every args.thermo steps.
     lmp.command("thermo          %i" % (args.thermo))
@@ -93,7 +105,8 @@ def configure(args):
 
     #clear shell
     os.system('clear')
-   
+    
+
     #outputs about lammps status
     print("The units are set to be adimensional and rescaled. LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.")
     print("Lammps is set with a box of simulation of " + str(args.xx) + " length units along the x-axys." )
@@ -111,4 +124,8 @@ def configure(args):
     print("PRINT PER DEFINIZIONE DELLE MODIFICHE AI PRIMI VICINI")
     print("PRINT PER DEFINIZIONE DELL'INTEGRATORE")
     print("Lammps will print the thermodynamics of the system every " + str(args.thermo) + " steps.")
+    
+    if args.s == False:
+       input("press a command to continue or press CTRL-C to abort")
+    
     return lmp

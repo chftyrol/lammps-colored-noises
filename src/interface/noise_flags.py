@@ -23,8 +23,8 @@ def configure():
     parser.add_argument('--zz', action='store', default=20, type=int,\
                     help='pass the region length along the z-axys, an int with a default value of 20')
 
-    parser.add_argument('--thermo', action='store', default=100, type=int, \
-                    help='print the thermodynamics of the system every args.thermo steps, an int with a default value of 100.')
+    parser.add_argument('--thermo', action='store', default=0, type=int, \
+                    help='print the thermodynamics of the system every args.thermo steps, an int with a default value of 0.')
 
     parser.add_argument('--pot', choices=['yukawa'], default='yukawa',  \
                     help='pass the potential type pairing with the lj one, s str type with \'yukawa\' as default str. Moreover, the potential type must be in the choices of this flag.')
@@ -41,6 +41,14 @@ def configure():
 
     parser.add_argument('--dump_speed', action='store', default=99, type=int, \
                     help='print in a file all particles\' speed components every args.dump_speed steps, an int with a default value of 99')
+                    
+    parser.add_argument('--final_speed', action='store_true',help='stores the condition for creating a file containing the velocities of all particles at the final step of integration' )
+    
+    parser.add_argument('--fspeed_vector', action='store_true',help='stores the condition for creating a vector containing all final velocities: it is conditioned by --final_speed')
+    
+    parser.add_argument('--s', action='store_true',help='stores the condition to mute all lammps setting printout and log.lammps storing')
+    
+    
     
     return parser
 
