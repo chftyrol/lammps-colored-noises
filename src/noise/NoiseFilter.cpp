@@ -1,7 +1,7 @@
 #include "NoiseFilter.h"
 
-NoiseFilter::NoiseFilter(double alpha, unsigned samplesize)
-  : _alpha(alpha), _samplesize(samplesize)
+NoiseFilter::NoiseFilter(double alpha, unsigned samplesize, double leakytau)
+  : _alpha(alpha), _samplesize(samplesize), _leakytau(leakytau)
 {
   _mem_re_size = 2 * _samplesize;
   _mem_fwtr_size = 1 + _mem_re_size / 2;
@@ -32,6 +32,8 @@ void NoiseFilter::filter(double* in, double* out)
     transfin[j][0] = tmp_r * _response[j][0] - tmp_i * _response[j][1];
     transfin[j][1] = tmp_r * _response[j][1] + tmp_i * _response[j][0];
   }
+  // Apply low-pass filter.
+  _leak(transfin, _samplesize);
   // Perform inverse DFT on the result.
   fftw_execute(backwardtransplan);
   // Rescale output, to correct for unnormalized DFT
@@ -64,3 +66,29 @@ void NoiseFilter::_compute_response()
   delete[] realspaceResponse;
 }
 
+void NoiseFilter::_leak(fftw_complex* signal, unsigned size)
+{
+  if(_leakytau <= 0.)
+    return;
+  else
+  {
+    // Leak:
+    // Amounts to dividing by (leakytau + sqrt(-1) * omega)
+    // As can be seen transforming the equation dy/dt = -leakytau * y + x
+    // where y is the output and x is the input.
+
+    double tmp_r, tmp_i;
+    double l1, l2, lden;
+
+    for(unsigned i = 0; i < size; ++i)
+    {
+      lden =  _leakytau * _leakytau + (double)(i * i);
+      l1 = _leakytau / lden;
+      l2 = (double)i / lden;
+      tmp_r = signal[i][0];
+      tmp_i = signal[i][1];
+      signal[i][0] = l1 * tmp_r + l2 * tmp_i;
+      signal[i][1] = l1 * tmp_i - l2 * tmp_r;
+    }
+  }
+}

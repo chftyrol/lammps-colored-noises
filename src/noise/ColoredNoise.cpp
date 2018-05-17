@@ -1,12 +1,12 @@
 #include "ColoredNoise.h"
 
-ColoredNoise::ColoredNoise(double mean, double stddev, double alpha, unsigned seed, unsigned samplesize)
-  : _mean(mean), _stddev(stddev), _alpha(alpha), _seed(seed), _samplesize(samplesize)
+ColoredNoise::ColoredNoise(double mean, double stddev, double alpha, unsigned seed, unsigned samplesize, double leakytau)
+  : _mean(mean), _stddev(stddev), _alpha(alpha), _seed(seed), _samplesize(samplesize), _leakytau(leakytau)
 {
   _sample = new double[2 * _samplesize];
   _wngenerator = new WhiteNoise(_mean, _stddev, _seed);
   if(_alpha != 0.0)
-    _thefilter = new NoiseFilter(_alpha, _samplesize);
+    _thefilter = new NoiseFilter(_alpha, _samplesize, _leakytau);
   _sampleit = 0;
   _generateSample();
 }

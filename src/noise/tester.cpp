@@ -10,16 +10,18 @@ int main(int argc, char** argv)
   double stddev = 1.0;
   double alpha = 2.0;
   unsigned seed = 79;
+  double leakytau = 0.;
 
   // Parse args
-  if(argc < 9)
+  if(argc < 11)
   {
-    std::cerr << "Usage:  tester.x -N <samplesize> -s <seed> -a <alpha> -d <stddev>" << std::endl \
+    std::cerr << "Usage:  tester.x -N <samplesize> -s <seed> -a <alpha> -d <stddev> -l <leakytau>" << std::endl \
               << "ARGS:" << std::endl \
               << "    samplesize: an unsigned integer value, representing how many random numbers are going to make up the noise sample." << std::endl \
               << "    seed: an unsigned integer value, representing the seed for the random number generator. Passing 0 uses a time based seed." << std::endl \
               << "    alpha: a non-negative floating point number in the interval [0.0,2.0]. The exponent in (1/f)^alpha, specifying the color of the noise." << std::endl \
-              << "    stddev: A positive floating point number, specifying the standard deviation of the white noise used to make colored noise." << std::endl ;
+              << "    stddev: A positive floating point number, specifying the standard deviation of the white noise used to make colored noise." << std::endl \
+              << "    leakytau: A non-negative floating point number, specifying the time constant of the leaky integrator. Passing 0.0 does not use a leaky integrator." << std::endl ;
     return 1;
   }
   else
@@ -46,15 +48,21 @@ int main(int argc, char** argv)
         a++;
         alpha = atof(argv[a]);
       }
+      else if(std::string(argv[a]) == "-l")
+      {
+        a++;
+        leakytau = atof(argv[a]);
+      }
     }
   }
 
-  std::cerr << "N = "               << N                                   << std::endl;
-  std::cerr << "seed = "            << seed                                << std::endl;
-  std::cerr << std::setprecision(2) << std::fixed << "stddev = " << stddev << std::endl;
-  std::cerr << std::setprecision(2) << std::fixed << "alpha = "  << alpha  << std::endl;
+  std::cerr <<                                       "N        =  " << N        << std::endl;
+  std::cerr <<                                       "seed     =  " << seed     << std::endl;
+  std::cerr << std::setprecision(2) << std::fixed << "stddev   =  " << stddev   << std::endl;
+  std::cerr << std::setprecision(2) << std::fixed << "alpha    =  " << alpha    << std::endl;
+  std::cerr << std::setprecision(2) << std::fixed << "leakytau =  " << leakytau << std::endl;
 
-  ColoredNoise gen(mean, stddev, alpha, seed, N);
+  ColoredNoise gen(mean, stddev, alpha, seed, N, leakytau);
 
   for(unsigned i = 0; i < N; ++i)
     std::cout << i << "\t" << gen() << std::endl;
