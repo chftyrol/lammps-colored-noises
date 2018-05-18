@@ -1,8 +1,10 @@
 from lammps import lammps
 import sys
 import os
+import mute
 
 def configure(args):
+    
 #from lammps import lammps + lmp = lammps() :
 #create an instance of LAMMPS, wrapped in a Python class by the lammps Python module, and return an instance of the Python class as lmp. It is used to make all subsequent calls to the LAMMPS library.
 
@@ -10,9 +12,6 @@ def configure(args):
     
     if args.s == True:
         lmp.command("log none")
-    
-    print(dir(lmp))
-    print(dir(lmp.commands_list))
     
     #Set variables which will define my region of simulation
     #Variables of style 'equal' store a formula which when evaluated \
@@ -80,6 +79,7 @@ def configure(args):
             #default yukawa 100.0 2.3
         except IndexError:
             sys.exit("IndexError: not enough coefficients for potential definition. Stopping lammps setting..program quit")
+
     #How to build neighbour build
     #This command sets parameters that affect the building of pairwise neighbor lists;
     #All atom pairs within a neighbor cutoff distance equal to the their force cutoff plus
@@ -108,24 +108,26 @@ def configure(args):
     
 
     #outputs about lammps status
-    print("The units are set to be adimensional and rescaled. LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.")
-    print("Lammps is set with a box of simulation of " + str(args.xx) + " length units along the x-axys." )
-    print("Lammps is set with a box of simulation of " + str(args.yy) + " length units along the y-axys." )
-    print("Lammps is set with a box of simulation of " + str(args.zz) + " length units along the z-axys." )
+    print("Lammps settings summary: ")
+    print("*) The units are set to be adimensional and rescaled. LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.")
+    print("*) Lammps is set with a box of simulation of " + str(args.xx) + " length units along the x-axys." )
+    print("*) Lammps is set with a box of simulation of " + str(args.yy) + " length units along the y-axys." )
+    print("*) Lammps is set with a box of simulation of " + str(args.zz) + " length units along the z-axys." )
 
-    print("The particles are set to be atoms.")
-    print("The lattice is set to be an fcc with a step of 0.8442 length units.")
-    print("The particles are set to have a mass equal to" + str(args.mass) + ".")
-    print("Velocities are set. DA SCRIVERE MEGLIO")
-    print("Lj potential between particles is set with epsilon=1.0, sigma=1.0, cutoff=2.5")
-    print(args.pot + "potential is set with coefficients: " + str(args.pot_coeff[0]) + ", " + str(args.pot_coeff[1]) + ", " + str(args.pot_coeff[2]) + ", " + str(args.pot_coeff[3]) + "." )
+    print("*) The particles are set to be atoms.")
+    print("*) The lattice is set to be an fcc with a step of 0.8442 length units.")
+    print("*) The particles are set to have a mass equal to " + str(args.mass) + ".")
+    print("*) Velocities are set to have null components by initial conditions.")
+    print("*) Lj potential between particles is set with epsilon=1.0, sigma=1.0, cutoff=2.5 .")
+    print("*) " + args.pot + " potential is set with coefficients: " + str(args.pot_coeff[0]) + ", " + str(args.pot_coeff[1]) + ", " + str(args.pot_coeff[2]) + ", " + str(args.pot_coeff[3]) + "." )
 
-    print("The neighbor list has been built with the command: neighbor    0.3 bin")
-    print("PRINT PER DEFINIZIONE DELLE MODIFICHE AI PRIMI VICINI")
-    print("PRINT PER DEFINIZIONE DELL'INTEGRATORE")
-    print("Lammps will print the thermodynamics of the system every " + str(args.thermo) + " steps.")
+    print("*) The neighbor list has been built with the command: neighbor    0.3 bin")
+    print("*) PRINT PER DEFINIZIONE DELLE MODIFICHE AI PRIMI VICINI")
+    print("*) PRINT PER DEFINIZIONE DELL'INTEGRATORE")
+    print("*) Lammps will print the thermodynamics of the system every " + str(args.thermo) + " steps.")
     
     if args.s == False:
-       input("press a command to continue or press CTRL-C to abort")
+        input("press ENTER to continue or press CTRL-C to abort")
+        os.system('clear')
     
     return lmp
