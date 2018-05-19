@@ -8,7 +8,7 @@
 class ColoredNoise
 {
   public:
-    ColoredNoise(double mean, double stddev, double alpha, unsigned seed=0, unsigned samplesize=1024, double leakytau=0.0);
+    ColoredNoise(double mean, double stddev, double alpha, unsigned seed=0, unsigned samplesize=1024, double leakcoef=0.0);
     ~ColoredNoise();
     double operator()();
   private:
@@ -18,7 +18,7 @@ class ColoredNoise
     double _alpha;
     unsigned _seed;
     unsigned _samplesize;
-    double _leakytau;
+    double _leakcoef;
     unsigned _sampleit;
     WhiteNoise* _wngenerator;
     NoiseFilter* _thefilter;
