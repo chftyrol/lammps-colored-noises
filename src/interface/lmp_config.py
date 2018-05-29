@@ -12,20 +12,22 @@ def configure(args):
     
     if args.s == True:
         lmp.command("log none")
-    
-    #Set variables which will define my region of simulation
-    #Variables of style 'equal' store a formula which when evaluated \
-    #produces a single numeric value which can be output
-    lmp.command("variable    xx equal %i" % (args.xx))
-    lmp.command("variable    yy equal %i" % (args.yy))
-    lmp.command("variable    zz equal %i" % (args.zz))
-    
-    
+            
     #Set the unit type
     #For style lj, all quantities are unitless.
     #Without loss of generality, LAMMPS sets the fundamental \
     #quantities mass, sigma, epsilon, and the Boltzmann constant = 1.
     lmp.command("units        lj")
+
+#ATTENZIONE:mettere il comando per modificarlo direttamente, e mettere in modo per cui se non mette nulla, usa il suo valore di default per ogni unità di misura usata.
+    lmp.command("timestep 0.005")
+
+    #Set variables which will define my region of simulation
+    #Variables of style 'equal' store a formula which when evaluated \
+    #produces a single numeric value which can be output
+    #lmp.command("variable    xx equal %i" % (args.xx))
+#lmp.command("variable    yy equal %i" % (args.yy))
+#  lmp.command("variable    zz equal %i" % (args.zz))
     
     #Define atom type
     lmp.command("atom_style    atomic") #atom_style style args
@@ -34,7 +36,9 @@ def configure(args):
     lmp.command("lattice        fcc 0.8442")    #lattice style scale keyword values
     
     #Generate my simulation box
-    lmp.command("region        scatola block 0 ${xx} 0 ${yy} 0 ${zz}")
+    lmp.command("region        sfera sphere 0 0 0 10")
+
+    lmp.command("region        scatola block -100 100 -100 100 -100 100")
         
     #Create the box
     lmp.command("create_box    1 scatola") #create_box N-type_atoms region-ID keyword value
@@ -43,7 +47,7 @@ def configure(args):
     #create_atoms command creates atoms on the lattice points inside the simulation\
     #box;For the box style, the create_atoms command fills the entire simulation box\
     #with particles on the lattice.
-    lmp.command("create_atoms    1 box")
+    lmp.command("create_atoms    1 region sfera") #For the box style, the create_atoms command fills the entire simulation box with particles on the lattice.
         
     #Set the adimensional mass to the atoms
     lmp.command("mass        1 %f" % (args.mass) )
@@ -59,8 +63,8 @@ def configure(args):
     #A velocity is generated using that seed.
     # This is a fast loop and the velocity assigned to a particular atom will be the same, independent of how many processors are used. However, the set of generated velocities may be more correlated than if the all or local keywords are used.
     
-    #lmp.command("velocity    all create 1.44 87287 loop geom")
-    lmp.command("velocity    all set 0 0 0")
+    lmp.command("velocity    all create 1.44 87287 loop geom")
+    #lmp.command("velocity    all set 0 0 0")
     
     
     
@@ -110,20 +114,29 @@ def configure(args):
     #outputs about lammps status
     print("Lammps settings summary: ")
     print("*) The units are set to be adimensional and rescaled. LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.")
+
     print("*) Lammps is set with a box of simulation of " + str(args.xx) + " length units along the x-axys." )
     print("*) Lammps is set with a box of simulation of " + str(args.yy) + " length units along the y-axys." )
     print("*) Lammps is set with a box of simulation of " + str(args.zz) + " length units along the z-axys." )
 
     print("*) The particles are set to be atoms.")
+
     print("*) The lattice is set to be an fcc with a step of 0.8442 length units.")
+
     print("*) The particles are set to have a mass equal to " + str(args.mass) + ".")
+
     print("*) Velocities are set to have null components by initial conditions.")
+
     print("*) Lj potential between particles is set with epsilon=1.0, sigma=1.0, cutoff=2.5 .")
+
     print("*) " + args.pot + " potential is set with coefficients: " + str(args.pot_coeff[0]) + ", " + str(args.pot_coeff[1]) + ", " + str(args.pot_coeff[2]) + ", " + str(args.pot_coeff[3]) + "." )
 
     print("*) The neighbor list has been built with the command: neighbor    0.3 bin")
+
     print("*) PRINT PER DEFINIZIONE DELLE MODIFICHE AI PRIMI VICINI")
+
     print("*) PRINT PER DEFINIZIONE DELL'INTEGRATORE")
+
     print("*) Lammps will print the thermodynamics of the system every " + str(args.thermo) + " steps.")
     
     if args.s == False:
