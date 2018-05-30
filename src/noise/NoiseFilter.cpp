@@ -1,7 +1,7 @@
 #include "NoiseFilter.h"
 
-NoiseFilter::NoiseFilter(double alpha, unsigned samplesize)
-  : _alpha(alpha), _samplesize(samplesize)
+NoiseFilter::NoiseFilter(double alpha, unsigned samplesize, double leakcoef)
+  : _alpha(alpha), _samplesize(samplesize), _leakcoef(leakcoef)
 {
   _mem_re_size = 2 * _samplesize;
   _mem_fwtr_size = 1 + _mem_re_size / 2;
@@ -37,6 +37,8 @@ void NoiseFilter::filter(double* in, double* out)
   // Rescale output, to correct for unnormalized DFT
   for(unsigned k = 0; k < _mem_re_size; ++k)
     out[k] /= ( (double)_samplesize );
+  // leak
+  _leak(out, _mem_re_size);
   // Free memory of the intermediate result in transformed space.
   delete[] transfin;
   // Delete DFT plans.
@@ -64,3 +66,17 @@ void NoiseFilter::_compute_response()
   delete[] realspaceResponse;
 }
 
+void NoiseFilter::_leak(double* signal, unsigned size)
+{
+  if(_leakcoef <= 0.)
+    return;
+  else
+  {
+    double tmp = signal[0];
+    for(unsigned i = 1; i < size; ++i)
+    {
+      signal[i] = (1. - _leakcoef) * signal[i] + _leakcoef * tmp;
+      tmp = signal[i];
+    }
+  }
+}

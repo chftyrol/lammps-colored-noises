@@ -6,7 +6,7 @@
 class NoiseFilter
 {
   public:
-    NoiseFilter(double alpha, unsigned samplesize=1024);
+    NoiseFilter(double alpha, unsigned samplesize=1024, double leakcoef=0.);
     ~NoiseFilter();
 
     void filter(double* in, double* out); 
@@ -21,11 +21,13 @@ class NoiseFilter
   private:
     double _alpha;
     unsigned _samplesize;
+    double _leakcoef;
     unsigned _mem_re_size;
     unsigned _mem_fwtr_size;
     unsigned _mem_rwtr_size;
     fftw_complex* _response; // Eigenvalues of the response matrix.
     void _compute_response(); // Calculate response matrix (directly in diagonal form).
+    void _leak(double*, unsigned);
 };
 
 #endif // __NOISEFILTER_H__
