@@ -2,6 +2,8 @@ from lammps import lammps
 import sys
 import os
 import mute
+#import py_pot
+import funzione
 
 def configure(args):
     
@@ -48,6 +50,10 @@ def configure(args):
     #box;For the box style, the create_atoms command fills the entire simulation box\
     #with particles on the lattice.
     lmp.command("create_atoms    1 region sfera") #For the box style, the create_atoms command fills the entire simulation box with particles on the lattice.
+    #lmp.command("group ID empty")
+#k = lmp.command("fix funz all python/invoke 10 post_force funzione.fai")
+#  print(k)
+#  sys.exit("done")
         
     #Set the adimensional mass to the atoms
     lmp.command("mass        1 %f" % (args.mass) )
@@ -65,24 +71,29 @@ def configure(args):
     
     lmp.command("velocity    all create 1.44 87287 loop geom")
     #lmp.command("velocity    all set 0 0 0")
+
+    lmp.command("pair_style lj/cut 2.5 ")
+    lmp.command("pair_coeff * * 1.0 1.0") #interaction 1 1 with epsilon, sigma e cutoff passed
+
+
+#lmp.command("pair_style python 2.5")
     
-    
-    
-        
+#lmp.command("pair_coeff * * py_pot.LJCutMelt lj")
+
     #Define the potential
     #pair_style yukawa kappa=screening_length cutoff=global_cutoff_for_Yukawa_interactions
-    if args.pot == 'yukawa':
-        try:
-            lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0],args.pot_coeff[1]))
+    # if args.pot == 'yukawa':
+    #   try:
+    #       lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0],args.pot_coeff[1]))
             #default yukawa 2.0 2.5
             #Define coeff of the interaction between different type of atoms
-            lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interaction 1 1 with epsilon, sigma e cutoff passed
+            #       lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interaction 1 1 with epsilon, sigma e cutoff passed
             
-            lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[2],args.pot_coeff[3]))
+            #     lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[2],args.pot_coeff[3]))
         
             #default yukawa 100.0 2.3
-        except IndexError:
-            sys.exit("IndexError: not enough coefficients for potential definition. Stopping lammps setting..program quit")
+            #except IndexError:
+            #sys.exit("IndexError: not enough coefficients for potential definition. Stopping lammps setting..program quit")
 
     #How to build neighbour build
     #This command sets parameters that affect the building of pairwise neighbor lists;
@@ -101,6 +112,8 @@ def configure(args):
     
 
     
+    lmp.command("variable    xx equal %i" % (funzione.fai()))
+    lmp.command("fix kick all addforce v_xx 0.0 0.0")
     
         
     #print the thermodynamics of the system every args.thermo steps.

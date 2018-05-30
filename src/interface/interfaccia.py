@@ -9,6 +9,7 @@ import os
 import noise_flags
 import lmp_config
 import mute
+import funzione
 
 
 #import the dynamical library from the shared object
