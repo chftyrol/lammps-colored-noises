@@ -3,7 +3,7 @@ import sys
 import os
 import mute
 #import py_pot
-import funzione
+
 
 def configure(args):
     
@@ -110,18 +110,19 @@ def configure(args):
     #Define type of temporal integration
     lmp.command("fix        1 all nve") #fix <fix_name> <atom_group> <what_fixed>
     
-
-    
-    lmp.command("variable    xx equal %i" % (funzione.fai()))
+    lmp.command("python faipy return v_xx format f file funzione.py")
+    lmp.command("variable    xx python faipy")
     lmp.command("fix kick all addforce v_xx 0.0 0.0")
     
+    lmp.command('fix extra all print 1 "funzione.faipy = ${xx}"')
+
         
     #print the thermodynamics of the system every args.thermo steps.
     lmp.command("thermo          %i" % (args.thermo))
 
     #if passed the right flag, lammps saves determined data in external files
     if args.if_dump_atom == True:
-        lmp.command("dump myDump all atom %i dump_atom.*.gz" % (args.dump_atom))
+        lmp.command("dump myDump all atom %i dump_atom.*" % (args.dump_atom))
 
     #here saves particle speed
     if args.if_dump_speed == True:

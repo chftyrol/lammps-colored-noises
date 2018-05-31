@@ -1,2 +1,3 @@
-def fai():
-    return 2
+import random
+def faipy():
+    return random.uniform(-100, 100)

@@ -37,3 +37,6 @@
 
 # Python cache
 __pycache__
+
+# lammps logs
+log.lammps
