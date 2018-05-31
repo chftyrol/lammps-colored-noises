@@ -1,15 +1,15 @@
 import argparse
 
 def configure():
-#Parser for flags
+# Parser for flags
 
-    #The ArgumentParser object will hold all the information necessary to parse\
-    #the command line into Python data types.
+    # The ArgumentParser object will hold all the information necessary to parse
+    # the command line into Python data types.
     parser = argparse.ArgumentParser(description='Python script interface able to generate\
                                  lj+yukawa, for now, simulations.',prefix_chars= '-')
                                 
     
-    #Create flags
+    # Create flags
     parser.add_argument('--units', choices=['lj','real','metal','si','cgs','electron','micro','nano'], default='lj',  \
                         help='pass the style of units used in the simulation and for all the variables. Default value is \' lj \' ')
     
@@ -45,12 +45,6 @@ def configure():
     parser.add_argument('--thermo', action='store', default=50, type=int, \
                         help='pass the number of steps in which the program prints the thermodynamics of the system; it is an int with a default value of 50.')
 
-#parser.add_argument('--pot', choices=['yukawa'], default='yukawa',
-#help='pass the potential type pairing with the lj one, a str type with \'yukawa\' as default str. Moreover, the potential type must be in the choices of this flag.')
-
-#parser.add_argument('--pot_coeff', action= 'append',type=float,nargs='+',default=[2.0, 2.5 , 100.0, 2.3],  help='Pass the needing potential coefficients:
-#*)for \'yukawa\' are the screening_length, global_cutoff, A (energy*distance units), cutoff(local, about that precise pairing);')
-    
     parser.add_argument('--if_dump_atom', action='store_true',help='inserting this flag makes possible to print in a .gz file a snapshot of the system. (bool variable, false by default)')
 
     parser.add_argument('--dump_atom', action='store', default=10, type=int, \
