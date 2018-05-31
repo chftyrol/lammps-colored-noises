@@ -19,10 +19,10 @@ def configure(args):
     #For style lj, all quantities are unitless.
     #Without loss of generality, LAMMPS sets the fundamental \
     #quantities mass, sigma, epsilon, and the Boltzmann constant = 1.
-    lmp.command("units        lj")
+    lmp.command("units        %s" % (args.units))
 
 #ATTENZIONE:mettere il comando per modificarlo direttamente, e mettere in modo per cui se non mette nulla, usa il suo valore di default per ogni unità di misura usata.
-    lmp.command("timestep 0.005")
+    lmp.command("timestep %f" % (args.step_length))
 
     #Set variables which will define my region of simulation
     #Variables of style 'equal' store a formula which when evaluated \
@@ -32,15 +32,15 @@ def configure(args):
 #  lmp.command("variable    zz equal %i" % (args.zz))
     
     #Define atom type
-    lmp.command("atom_style    atomic") #atom_style style args
+    lmp.command("atom_style    %s" % (args.atom_style)) #atom_style style args
     
     #Generate my lattice of type fcc and step 0.8442
     lmp.command("lattice        fcc 0.8442")    #lattice style scale keyword values
     
     #Generate my simulation box
-    lmp.command("region        sfera sphere 0 0 0 10")
+    lmp.command("region        sfera sphere %f %f %f %f" % (args.sphere_coord[0],args.sphere_coord[1],args.sphere_coord[2],args.sphere_coord[3]))
 
-    lmp.command("region        scatola block -100 100 -100 100 -100 100")
+    lmp.command("region        scatola block %f %f %f %f %f %f" % (args.box[0],args.box[1],args.box[2],args.box[3],args.box[4],args.box[5]))
         
     #Create the box
     lmp.command("create_box    1 scatola") #create_box N-type_atoms region-ID keyword value
@@ -72,8 +72,8 @@ def configure(args):
     lmp.command("velocity    all create 1.44 87287 loop geom")
     #lmp.command("velocity    all set 0 0 0")
 
-    lmp.command("pair_style lj/cut 2.5 ")
-    lmp.command("pair_coeff * * 1.0 1.0") #interaction 1 1 with epsilon, sigma e cutoff passed
+    lmp.command("pair_style lj/cut %f " % (args.lj_coeff[0]))
+    lmp.command("pair_coeff * * %f %f" % (args.lj_coeff[1],args.lj_coeff[2])) #interaction 1 1 with epsilon, sigma e cutoff passed
 
 
 #lmp.command("pair_style python 2.5")
@@ -104,7 +104,7 @@ def configure(args):
     
         
         
-    lmp.command("neigh_modify    delay 0 every 20 check no")
+    lmp.command("neigh_modify    delay 0 every 10 check no")
     
         
     #Define type of temporal integration
@@ -119,6 +119,16 @@ def configure(args):
     #print the thermodynamics of the system every args.thermo steps.
     lmp.command("thermo          %i" % (args.thermo))
 
+    #if passed the right flag, lammps saves determined data in external files
+    if args.if_dump_atom == True:
+        lmp.command("dump myDump all atom %i dump_atom.*.gz" % (args.dump_atom))
+
+    #here saves particle speed
+    if args.if_dump_speed == True:
+        lmp.command("dump myDump2 all custom %i dump_speed.* vx vy vz" % (args.dump_speed))
+
+    if args.final_speed == True:
+        lmp.command("dump myDump3 all custom %i final_speed.* vx vy vz" % (args.step))
 
     #clear shell
     os.system('clear')
@@ -142,7 +152,7 @@ def configure(args):
 
     print("*) Lj potential between particles is set with epsilon=1.0, sigma=1.0, cutoff=2.5 .")
 
-    print("*) " + args.pot + " potential is set with coefficients: " + str(args.pot_coeff[0]) + ", " + str(args.pot_coeff[1]) + ", " + str(args.pot_coeff[2]) + ", " + str(args.pot_coeff[3]) + "." )
+#print("*) " + args.pot + " potential is set with coefficients: " + str(args.pot_coeff[0]) + ", " + str(args.pot_coeff[1]) + ", " + str(args.pot_coeff[2]) + ", " + str(args.pot_coeff[3]) + "." )
 
     print("*) The neighbor list has been built with the command: neighbor    0.3 bin")
 

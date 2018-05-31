@@ -7,12 +7,31 @@ def configure():
     #the command line into Python data types.
     parser = argparse.ArgumentParser(description='Python script interface able to generate\
                                  lj+yukawa, for now, simulations.',prefix_chars= '-')
+                                
+    
     #Create flags
-    parser.add_argument('--step', action='store', default=100, type=int, \
+    parser.add_argument('--units', choices=['lj','real','metal','si','cgs','electron','micro','nano'], default='lj',  \
+                        help='pass the style of units used in the simulation and for all the variables. Default value is \' lj \' ')
+    
+    parser.add_argument('--step_length', action='store', default=0.005, type=float, \
+                        help='pass the timesteps\' length. Default value is 0.005 .')
+                        
+    parser.add_argument('--step_number', action='store', default=100, type=int, \
                     help='pass the number of simulations, int with a default value of 100.')
+                    
+    parser.add_argument('--atom_style', choices=['angle','atomic','body','bond','charge','dipole','dpd','edpd', 'mdpd','tdpd','electron','ellipsoid','full','line','meso','molecular','peri','smd','sphere','tri','template','hybrid'], default='atomic',  \
+                    help='pass the style of the atoms used in the simulation. Default value is \' atomic \'')
 
+    parser.add_argument('--sphere_coord', action= 'append',type=float,nargs='+',default=[0, 0 , 0, 10],  help='Pass the needing for defining the spherical region in which the particles have to be created; the parameters needed are the three coordinates of the center and the radius. The default values are: 0 0 0 10')
+    
+    parser.add_argument('--lj_coeff', action= 'append',type=float,nargs='+',default=[2.5,1.0,1.0],  help='Pass the needing coefficients for defining the lj potential; the parameters needed are the cutoff, epsilon, sigma. The default values are: 2.5,1.0,1.0 .')
+    
     parser.add_argument('--mass', action='store', default=1.0, type=float, \
-                    help='pass the particles\' mass value, a float with a default value of 1.0 .')
+                        help='pass the particles\' mass value, a float with a default value of 1.0 .')
+    
+    parser.add_argument('--box', action= 'append',type=float,nargs='+',default=[-100, 100 , -100, 100,-100,100],  help='Pass the needing for defining the simulation box; the parameters needed are the xlo,xhi,ylo,yhi,zlo,zhi. The default values are: -100, 100, -100, 100, -100, 100.')
+
+    
 
     parser.add_argument('--xx', action='store', default=20, type=int, \
                     help='pass the region length along the x-axys, an int with a default value of 20.')
@@ -26,11 +45,11 @@ def configure():
     parser.add_argument('--thermo', action='store', default=50, type=int, \
                         help='pass the number of steps in which the program prints the thermodynamics of the system; it is an int with a default value of 50.')
 
-    parser.add_argument('--pot', choices=['yukawa'], default='yukawa',  \
-                    help='pass the potential type pairing with the lj one, a str type with \'yukawa\' as default str. Moreover, the potential type must be in the choices of this flag.')
+#parser.add_argument('--pot', choices=['yukawa'], default='yukawa',
+#help='pass the potential type pairing with the lj one, a str type with \'yukawa\' as default str. Moreover, the potential type must be in the choices of this flag.')
 
-    parser.add_argument('--pot_coeff', action= 'append',type=float,nargs='+',default=[2.0, 2.5 , 100.0, 2.3],  help='Pass the needing potential coefficients: \
-                        *)for \'yukawa\' are the screening_length, global_cutoff, A (energy*distance units), cutoff(local, about that precise pairing);')
+#parser.add_argument('--pot_coeff', action= 'append',type=float,nargs='+',default=[2.0, 2.5 , 100.0, 2.3],  help='Pass the needing potential coefficients:
+#*)for \'yukawa\' are the screening_length, global_cutoff, A (energy*distance units), cutoff(local, about that precise pairing);')
     
     parser.add_argument('--if_dump_atom', action='store_true',help='inserting this flag makes possible to print in a .gz file a snapshot of the system. (bool variable, false by default)')
 
@@ -48,6 +67,7 @@ def configure():
     
     parser.add_argument('-s', action='store_true',help='stores the condition to mute all lammps setting printout and log.lammps storing. (bool variable, false by default)')
     
+    print("Arguments parsed correctly.")
     
     
     return parser
