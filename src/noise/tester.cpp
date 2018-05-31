@@ -65,7 +65,7 @@ int main(int argc, char** argv)
   ColoredNoise gen(mean, stddev, alpha, seed, N, leakcoef);
 
   for(unsigned i = 0; i < N; ++i)
-    std::cout << i << "\t" << gen() << std::endl;
+    std::cout << gen() << std::endl;
 
   return 0;
 }
