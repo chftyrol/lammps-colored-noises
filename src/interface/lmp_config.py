@@ -96,21 +96,64 @@ def configure(args):
     # Define type of temporal integration
     lmp.command("fix        1 all nve") # fix <fix_name> <atom_group> <what_fixed>
     
+    # Define a variable equal to the current time step, to pass to the generator to avoid ambiguities.
     lmp.command("variable nstep equal step")
+
+    # Define noise sample size variable equal to the total number of step to do (the +1 is because the steps are counted from 0)
+    lmp.command('variable noisesamplesize equal "%i + 1"' % (args.step_number))
+
+    ###                                                                     ###
+    # TODO : alpha, stddev, leak must be set starting from cmd line arguments #
+    ###                                                                     ###
+
+    # Define noise alpha
+    lmp.command('variable noisealpha equal 1.0')
+
+    # Define noise stddev
+    lmp.command('variable noisestddev equal 1.0')
+
+    # Define noise leak coeff
+    lmp.command('variable noiseleak equal 0.0')
+
+    # Define noise global seed
+    lmp.command('variable noiseglobalseed equal 7')
+
+    # Seeding mechanism:
+    # Global seed --->      1       , 2       , 3       , ...
+    # xyz    seed --->      {1 2 3} , {4 5 6} , {7 8 9} , ...
+    #                        ^ ^ ^     ^ ^ ^     ^ ^ ^
+    #                        x y z     x y z     x y z
+    # Hence, if the global seed is g, then the x seed is (g - 1)*3 + 1, the y seed is (g - 1)*3 + 2 and the z seed is (g - 1)*3 + 3,
+
+    # Define x noise seed
+    lmp.command('variable noisexseed equal "(v_noiseglobalseed - 1) * 3 + 1"')
+    # Define y noise seed
+    lmp.command('variable noiseyseed equal "(v_noiseglobalseed - 1) * 3 + 2"')
+    # Define z noise seed
+    lmp.command('variable noisezseed equal "(v_noiseglobalseed - 1) * 3 + 3"')
+
     # Expose noise generator python function to lammps
     # The function returns a floating point number (hence the `f`) and is contained in the specified file.
-    # The return value is saved in the lammps variable `xx`
-    lmp.command("python generate input 1 v_nstep return v_xx format if file generator.py")
+    # The return value is saved in the lammps variable `coloredkickx`
+    lmp.command('python generatex input 6 v_nstep v_noisesamplesize v_noisealpha v_noisestddev v_noiseleak v_noisexseed return v_coloredkickx format iifffif file generator.py')
 
-    # Define the lammps variable `xx`, which value will be specified by the return value of the function defined above.
-    lmp.command("variable    xx python generate")
+    # Do the same for the other two dimensions
+    lmp.command('python generatey input 6 v_nstep v_noisesamplesize v_noisealpha v_noisestddev v_noiseleak v_noiseyseed return v_coloredkicky format iifffif exists')
+    lmp.command('python generatez input 6 v_nstep v_noisesamplesize v_noisealpha v_noisestddev v_noiseleak v_noisezseed return v_coloredkickz format iifffif exists')
+
+    # Define the lammps variable `coloredkickx`, which value will be specified by the return value of the function defined above.
+    lmp.command("variable    coloredkickx python generatex")
+
+    # Do the same for dimensions y and z
+    lmp.command("variable    coloredkicky python generatey")
+    lmp.command("variable    coloredkickz python generatez")
 
     # Add the fix addforce to the simulation.
     # It will add an impulsive force, whose values are specified by the variables set by the python function.
-    lmp.command("fix kick all addforce v_xx 0.0 0.0")
+    lmp.command("fix kick all addforce v_coloredkickx v_coloredkicky v_coloredkickz")
     
-    # For debugging purposes print the results of the generator function.
-    # lmp.command('fix extra all print 1 "generator.generate = ${xx}"')
+    # For debugging purposes print any needed variable from here.
+    # lmp.command('fix extra all print 1 "generator.generate = ${coloredkickz}"')
         
     # Print the thermodynamics of the system every args.thermo steps.
     lmp.command("thermo          %i" % (args.thermo))

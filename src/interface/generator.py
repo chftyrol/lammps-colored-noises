@@ -3,36 +3,70 @@ import os
 import subprocess
 
 generatorpath = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/noise/tester.x"
-nlaststep = -1
-lastvalue = 0
-samplex = []
-sampley = []
-samplez = []
+nlaststepx = -1
+nlaststepy = -1
+nlaststepz = -1
+lastvaluex = 0
+lastvaluey = 0
+lastvaluez = 0
+samplex = None
+sampley = None
+samplez = None
 
-def getsample():
-    N = 101
-    alpha = 1.0
-    d = 1.0
-    leak = 0.
-    seed = 776
-    cmd = generatorpath + " -N " + str(N) + " -a " + str(alpha) + " -d " + str(d) + " -l " + str(leak) + " -s " + str(seed)
+def gensample(samplesize, alpha, devstd, leak, seed, dimensionlabel):
+    global samplex, sampley, samplez
+    cmd = generatorpath + " -N " + str(samplesize) + " -a " + str(alpha) + " -d " + str(devstd) + " -l " + str(leak) + " -s " + str(seed)
     print("Running generator:\n" + cmd)
-    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, shell=True, encoding='ascii', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     proc.wait()
-    while True :
-        line = proc.stdout.readline().decode('ascii')
-        if line != '' :
-            samplex.append(float(line))
-        else :
-            break
+    if dimensionlabel == "fx" :
+        samplex = proc.stdout
+    elif dimensionlabel == "fy" :
+        sampley = proc.stdout
+    elif dimensionlabel == "fz" :
+        samplez = proc.stdout
 
-def generate(nstep):
-    global nlaststep, lastvalue
-    if nlaststep == nstep :
-        return lastvalue
+def generatex(nstep, noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed):
+    global nlaststepx, lastvaluex
+    if nlaststepx == nstep :
+        return lastvaluex
+
     if nstep == 0 :
-        getsample()
-    nlaststep = nstep
-    value = samplex[nstep]
-    lastvalue = value
+        print("Setting up generator for noise sample of dimension x...")
+        print("Noise sample size = " + str(noisesamplesize) + "\nNoise alpha = " + str(noisealpha) + "\nNoise devstd = " + str(noisedevstd) + "\nNoise leak coeff = " + str(noiseleak) + "\nNoise seed = " + str(noiseseed))
+        gensample(noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed, "fx")
+
+    nlaststepx = nstep
+    value = float(samplex.readline())
+    lastvaluex = value
+    return value
+
+def generatey(nstep, noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed):
+    global nlaststepy, lastvaluey
+    if nlaststepy == nstep :
+        return lastvaluey
+
+    if nstep == 0 :
+        print("Setting up generator for noise sample of dimension y...")
+        print("Noise sample size = " + str(noisesamplesize) + "\nNoise alpha = " + str(noisealpha) + "\nNoise devstd = " + str(noisedevstd) + "\nNoise leak coeff = " + str(noiseleak) + "\nNoise seed = " + str(noiseseed))
+        gensample(noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed, "fy")
+
+    nlaststepy = nstep
+    value = float(sampley.readline())
+    lastvaluey = value
+    return value
+
+def generatez(nstep, noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed):
+    global nlaststepz, lastvaluez
+    if nlaststepz == nstep :
+        return lastvaluez
+
+    if nstep == 0 :
+        print("Setting up generator for noise sample of dimension z...")
+        print("Noise sample size = " + str(noisesamplesize) + "\nNoise alpha = " + str(noisealpha) + "\nNoise devstd = " + str(noisedevstd) + "\nNoise leak coeff = " + str(noiseleak) + "\nNoise seed = " + str(noiseseed))
+        gensample(noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed, "fz")
+
+    nlaststepz = nstep
+    value = float(samplez.readline())
+    lastvaluez = value
     return value
