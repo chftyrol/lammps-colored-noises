@@ -5,6 +5,7 @@ import cn_data_manage as di
 import cn_math as m
 import cn_multiprocs as mp
 
+
 # Definisci il parser
 parser = ArgumentParser(description="Python script to test noise\
 				     generation capabilities of\
@@ -49,6 +50,7 @@ main_loop_iter = mp.get_main_loop_iter(data_file, data_number, data_per_iter)
 # delle deviazioni standard
 averages_list = []
 std_devs_list = []
+alphas_list = []
 
 
 # Avvia il loop principale
@@ -85,6 +87,14 @@ for index in range(0,main_loop_iter):
 	# standard calcolate in questa iterazione
 	std_devs_list.extend(iter_std_devs_list)
 
+	# Calcola la lista dei parametri alpha dei campioni
+	# per questa iterazione
+	iter_alphas_list = mp.multi_get_alpha(samples_list)
+	# Appendi alla lista dei parametri alpha tutti i parametri
+	# alpha calcolati in questa iterazione
+	alphas_list.extend(iter_alphas_list)
+
+
 
 # Calcola il valore di aspettazione del  rumore
 # dalla lista dei valori di apettazione di tutti i
@@ -107,4 +117,15 @@ print("Noise Std. Deviation:", noise_std_dev)
 # Calcola e stampa a standard output la deviazione standard
 # della deviazione standard del rumore.
 print("Noise Std. Deviation Std. Deviation:", m.list_std_dev(std_devs_list,noise_std_dev))
+
+# Calcola il parametro alpha del rumore
+# dalla lista dei parametri alpha di tutti i
+# campioni
+noise_alpha = m.list_average(alphas_list)
+# Stampa a standard output il parametro alpha del
+# rumore
+print("Noise Alpha Parameter:", noise_alpha)
+# Calcola e stampa a standard output la deviazione standard
+# del parametro alpha del rumore.
+print("Noise Alpha Parameter Std. Deviation:", m.list_std_dev(alphas_list,noise_alpha))
 
