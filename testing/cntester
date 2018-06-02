@@ -25,7 +25,7 @@ parser.add_argument('samp_per_CPU', nargs='?', default=1,\
 		    help = "a positive integer representing the medium\
 		    number of samples per CPU per main loop iteration\
 		    (default = 1)")
-parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.1')
+parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.2')
 
 # Parsa la linea di comando
 args = parser.parse_args()
