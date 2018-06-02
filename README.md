@@ -38,7 +38,7 @@ Il calcolo della funzione risposta e in generale l'algoritmo utilizzato da `Nois
 L'analisi dei rumori colorati, generati attraverso il precedente schema, è possibile grazie alo script di Python `cntester`, presente in `/testing`.
 
 ### Dipendenze
-`cntester` fa uso delle librerie di python `scipy e `numpy` (oltre ai moduli presenti nel progetto). Inoltre si rende necessario l'utilizzo di una versione del linguaggio **>=3.0.0**.
+`cntester` fa uso delle librerie di python `scipy` e `numpy` (oltre ai moduli presenti nel progetto). Inoltre si rende necessario l'utilizzo di una versione del linguaggio **>=3.0.0**.
 
 #### Installare `scipy` e `numpy`
 Le librerie menzionate si possono installare sfruttando i seguenti metodi:
