@@ -45,3 +45,13 @@ def multi_std_dev(samples_list, averages_list):
 
         return result
 
+
+def multi_get_alpha(samples_list):
+	"Return the list of alpha parameters calculating it from a list of samples"
+
+	pool = Pool()
+	result = pool.map(m.get_alpha, samples_list)
+	pool.close()
+
+	return result
+
