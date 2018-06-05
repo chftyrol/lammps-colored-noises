@@ -61,6 +61,20 @@ def configure():
     
     parser.add_argument('-s', action='store_true',help='stores the condition to mute all lammps setting printout and log.lammps storing. (bool variable, false by default)')
     
+    #flags for the generator
+    parser.add_argument('--noise_alpha', action='store', default=1.0, type=float, \
+                        help='Set the parameter alpha needed for the generator, a float with a default value of 1.0')
+                        
+    parser.add_argument('--noise_stddev', action='store', default=1.0, type=float, \
+                        help='Set the parameter stddev needed for the generator, a float with a default value of 1.0')
+                                        
+    parser.add_argument('--noise_leak', action='store', default=1.0, type=float, \
+                        help='Set the parameter leak needed for the generator, a float with a default value of 0.0')
+                    
+    parser.add_argument('--global_seed', action='store', default=7.0, type=float, \
+                        help='Set the parameter leak needed for the generator, a float with a default value of 7.0')
+    
+    
     print("Arguments parsed correctly.")
     
     

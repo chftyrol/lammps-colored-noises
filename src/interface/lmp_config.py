@@ -107,16 +107,16 @@ def configure(args):
     ###                                                                     ###
 
     # Define noise alpha
-    lmp.command('variable noisealpha equal 1.0')
+    lmp.command('variable noisealpha equal %f' % (args.noise_alpha))
 
     # Define noise stddev
-    lmp.command('variable noisestddev equal 1.0')
+    lmp.command('variable noisestddev equal %f' % (args.noise_stddev))
 
     # Define noise leak coeff
-    lmp.command('variable noiseleak equal 0.0')
+    lmp.command('variable noiseleak equal %f' % (args.noise_leak))
 
     # Define noise global seed
-    lmp.command('variable noiseglobalseed equal 7')
+    lmp.command('variable noiseglobalseed equal %f' % (args.global_seed))
 
     # Seeding mechanism:
     # Global seed --->      1       , 2       , 3       , ...
