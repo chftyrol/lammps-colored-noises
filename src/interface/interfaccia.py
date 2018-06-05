@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
-# import numpy as np
-# TODO : ^ use numpy for results analysis.
+import numpy as np
+
 import os
 
 import noise_flags
@@ -28,9 +28,9 @@ lmp = lmp_config.configure(args)
 lmp.command("run       %i" % (args.step_number)) # i perche è un int
 
 # If requested print the final speeds.
-if args.fspeed_vector == True:
-        speed = np.genfromtxt("final_speed.%i" % (args.step), delimiter=" ", skip_header=9, dtype=str)
+if args.final_speed == True:
+        speed = np.genfromtxt("final_speed.%i" % (args.step_number), delimiter=" ", skip_header=9, dtype=str)
         if args.s == True:
             os.system('clear')
             mute.enablePrint()
-        print("the vector speed has been initialized correctly")
+        print("The speed vector has been initialized correctly")

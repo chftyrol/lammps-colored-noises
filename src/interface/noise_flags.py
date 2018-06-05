@@ -45,19 +45,19 @@ def configure():
     parser.add_argument('--thermo', action='store', default=50, type=int, \
                         help='pass the number of steps in which the program prints the thermodynamics of the system; it is an int with a default value of 50.')
 
-    parser.add_argument('--if_dump_atom', action='store_true',help='inserting this flag makes possible to print in a .gz file a snapshot of the system. (bool variable, false by default)')
+#parser.add_argument('--if_dump_atom', action='store_true',help='inserting this flag makes possible to print in a .gz file a snapshot of the system. (bool variable, false by default)')
 
-    parser.add_argument('--dump_atom', action='store', default=10, type=int, \
+    parser.add_argument('--dump_atom', action='store', default=0, type=int, \
                     help='print in a .gz file a snapshot of the simulation every args.dump_atom steps, an int with a default value of 10.')
 
-    parser.add_argument('--if_dump_speed', action='store_true',help='inserting this flag makes possible to print in a dump file all speed components of all particles. (bool variable, false by default)')
+#parser.add_argument('--if_dump_speed', action='store_true',help='inserting this flag makes possible to print in a dump file all speed components of all particles. (bool variable, false by default)')
 
-    parser.add_argument('--dump_speed', action='store', default=99, type=int, \
+    parser.add_argument('--dump_speed', action='store', default=0, type=int, \
                     help='print in a file all particles\' speed components every args.dump_speed steps, an int with a default value of 99')
                     
-    parser.add_argument('--final_speed', action='store_true',help='stores the condition for creating a file containing the velocities of all particles at the final step of integration. (bool variable, false by default)' )
+                    #parser.add_argument('--final_speed', action='store_true',help='stores the condition for creating a file containing the velocities of all particles at the final step of integration. (bool variable, false by default)' )
     
-    parser.add_argument('--fspeed_vector', action='store_true',help='stores the condition for creating a vector containing all final velocities: it is conditioned by --final_speed. (bool variable, false by default)')
+    parser.add_argument('--final_speed', action='store_true',help='stores the condition for creating a vector containing all final velocities: it is conditioned by --final_speed. (bool variable, false by default)')
     
     parser.add_argument('-s', action='store_true',help='stores the condition to mute all lammps setting printout and log.lammps storing. (bool variable, false by default)')
     

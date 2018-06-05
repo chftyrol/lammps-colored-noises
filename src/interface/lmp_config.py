@@ -159,15 +159,15 @@ def configure(args):
     lmp.command("thermo          %i" % (args.thermo))
 
     # If passed the right flag, lammps saves determined data in external files
-    if args.if_dump_atom == True:
+    if args.dump_atom != 0:
         lmp.command("dump myDump all atom %i dump_atom.*" % (args.dump_atom))
 
     # Here saves particle speed
-    if args.if_dump_speed == True:
+    if args.dump_speed != 0:
         lmp.command("dump myDump2 all custom %i dump_speed.* vx vy vz" % (args.dump_speed))
 
     if args.final_speed == True:
-        lmp.command("dump myDump3 all custom %i final_speed.* vx vy vz" % (args.step))
+        lmp.command("dump myDump3 all custom %i final_speed.* vx vy vz" % (args.step_number))
 
     # Clear shell
     os.system('clear')
