@@ -30,17 +30,19 @@ def configure():
                         help='pass the particles\' mass value, a float with a default value of 1.0 .')
     
     parser.add_argument('--box', action= 'append',type=float,nargs='+',default=[-100, 100 , -100, 100,-100,100],  help='Pass the needing for defining the simulation box; the parameters needed are the xlo,xhi,ylo,yhi,zlo,zhi. The default values are: -100, 100, -100, 100, -100, 100.')
-
     
+    parser.add_argument('--skin', action='store', default=3.0, type=float, \
+                        help='pass the value of the skin distance, used in defining pairwise neighbor lists.')
+        
+    parser.add_argument('--neigh_delay', action='store', default=0, type=int, \
+                        help='pass how many steps may pass before building a new neighbour list. It has an intvalue of 0.')
+                        
+    parser.add_argument('--neigh_every', action='store', default=10, type=int, \
+                    help='pass every how many steps must be built a new list. It has an intvalue of 10.')
+                    
+    parser.add_argument('--neigh_check', choices=['yes','no'], default='no',  \
+                    help='If the check setting is yes, then the every and delay settings determine when a build may possibly be performed, but an actual build only occurs if some atom has moved more than half the skin distance (specified in the neighbor command) since the last build. It is a str with choices "yes" or "no", with a default value of "no".')
 
-    parser.add_argument('--xx', action='store', default=20, type=int, \
-                    help='pass the region length along the x-axys, an int with a default value of 20.')
-
-    parser.add_argument('--yy', action='store', default=20, type=int, \
-                    help='pass the region length along the y-axys, an int with a default value of 20.')
-
-    parser.add_argument('--zz', action='store', default=20, type=int,\
-                    help='pass the region length along the z-axys, an int with a default value of 20.')
 
     parser.add_argument('--thermo', action='store', default=50, type=int, \
                         help='pass the number of steps in which the program prints the thermodynamics of the system; it is an int with a default value of 50.')

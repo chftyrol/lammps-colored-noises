@@ -90,11 +90,12 @@ def configure(args):
     # All atom pairs within a neighbor cutoff distance equal to the their force cutoff plus
     # the skin distance are stored in the list
     # bin è la modalità di creare la lista di primi vicini
-    lmp.command("neighbor    0.3 bin") # neighbor skin style
-    lmp.command("neigh_modify    delay 0 every 10 check no")
+    #The bin style creates the list by binning which is an operation that scales linearly with N/P, the number of atoms per processor where N = total number of atoms and P = number of processors.
+    lmp.command("neighbor %f bin" % (args.skin)) # neighbor skin style
+    lmp.command("neigh_modify    delay %i every %i check %s" % (args.neigh_delay,args.neigh_every,args.neigh_check))
 
     # Define type of temporal integration
-    lmp.command("fix        1 all nve") # fix <fix_name> <atom_group> <what_fixed>
+    lmp.command("fix        fix1 all nve") # fix <fix_name> <atom_group> <what_fixed>
     
     # Define a variable equal to the current time step, to pass to the generator to avoid ambiguities.
     lmp.command("variable nstep equal step")
@@ -175,31 +176,36 @@ def configure(args):
 
     # Outputs about lammps status
     print("Lammps settings summary: ")
-    print("*) The units are set to be adimensional and rescaled. LAMMPS sets the fundamental quantities mass, sigma, epsilon, and the Boltzmann constant = 1.")
+    print("\n")
+    
+    print("*) The units used by simulation are: " + str(args.units) + " .")
 
-    print("*) Lammps is set with a box of simulation of " + str(args.xx) + " length units along the x-axys." )
-    print("*) Lammps is set with a box of simulation of " + str(args.yy) + " length units along the y-axys." )
-    print("*) Lammps is set with a box of simulation of " + str(args.zz) + " length units along the z-axys." )
+    print("*) The number of timesteps for this simulations is : " + str(args.step_number) + " .")
 
-    print("*) The particles are set to be atoms.")
+    print("*) The atom style chosen for the particles is: " + str(args.atom_style) + " .")
 
     print("*) The lattice is set to be an fcc with a step of 0.8442 length units.")
 
+    print("*) The atoms are set in a sphere with centre of coordinates x= " + str(args.sphere_coord[0]) + ", y= " + str(args.sphere_coord[1]) + ", z= " + str(args.sphere_coord[2]) + " and a ray of " + str(args.sphere_coord[3]) + " .")
+
+    print("*) Our simulation box has coordinates Xmin= " + str(args.box[0]) + ", Xmax= " + str(args.box[1]) + ", Ymin= " + str(args.box[4]) + ", Ymax= " + str(args.box[3]) + ", Zmin= " + str(args.box[4]) + ", Zmax= " + str(args.box[5]) + " ." )
+
     print("*) The particles are set to have a mass equal to " + str(args.mass) + ".")
 
-    print("*) Velocities are set to have null components by initial conditions.")
+    print("*) Velocities are set randomly.")
 
     print("*) Lj potential between particles is set with epsilon=1.0, sigma=1.0, cutoff=2.5 .")
 
-    print("*) The neighbor list has been built with the command: neighbor    0.3 bin")
+    print("*) The neighbor list has been built by binning and with a skin distance of " + str(args.skin) + " .")
 
-    print("*) PRINT PER DEFINIZIONE DELLE MODIFICHE AI PRIMI VICINI")
+    print("*) Our simulation box has coordinates Xmin= " + str(args.box[0]) + ", Xmax= " + str(args.box[1]) + ", Ymin= " + str(args.box[4]) + ", Ymax= " + str(args.box[3]) + ", Zmin= " + str(args.box[4]) + ", Zmax= " + str(args.box[5]) + " ." )
 
-    print("*) PRINT PER DEFINIZIONE DELL'INTEGRATORE")
+    print("*) It will be performed a constant NVE (Particles' number, Volume,Energy) integration to update position and velocity for atoms each timestep.")
 
     print("*) Lammps will print the thermodynamics of the system every " + str(args.thermo) + " steps.")
     
     if args.s == False:
+        print("\n")
         input("press ENTER to continue or press CTRL-C to abort")
         os.system('clear')
     
