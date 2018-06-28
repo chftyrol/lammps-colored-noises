@@ -29,14 +29,16 @@ def configure(args):
     # Define atom type
     lmp.command("atom_style    %s" % (args.atom_style)) # atom_style style args
     
-    # Generate my lattice of type fcc and step 0.8442
+    # Generate the lattice of type fcc and step 0.8442
     lmp.command("lattice        fcc 0.8442")    # lattice style scale keyword values
     
-    # Generate my simulation box
+    # Generate particles' initial region
     lmp.command("region        sfera sphere %f %f %f %f" % (args.sphere_coord[0],args.sphere_coord[1],args.sphere_coord[2],args.sphere_coord[3]))
 
+    # Generate the noise region
     lmp.command("region        sferetta sphere %f %f %f %f" % (args.sphere_coord[0],args.sphere_coord[1],args.sphere_coord[2],args.sphere_coord[3]/2))
 
+    # Generate the simulation box
     lmp.command("region        scatola block %f %f %f %f %f %f" % (args.box[0],args.box[1],args.box[2],args.box[3],args.box[4],args.box[5]))
         
     # Create the box
@@ -62,30 +64,13 @@ def configure(args):
     # A velocity is generated using that seed.
     # This is a fast loop and the velocity assigned to a particular atom will be the same, independent of how many processors are used. However, the set of generated velocities may be more correlated than if the all or local keywords are used.
     lmp.command("velocity    all create 2.0 87287 loop geom")
-    #lmp.command("velocity    all set 0 0 0")
+
 
     # Define the interaction type and intensity
     lmp.command("pair_style lj/cut %f " % (args.lj_coeff[0]))
-    lmp.command("pair_coeff * * %f %f" % (args.lj_coeff[1],args.lj_coeff[2])) #interaction 1 1 with epsilon, sigma e cutoff passed
-#lmp.command("pair_style hybrid/overlay lj/cut 2.5 yukawa 2.0 2.5 ")
-#lmp.command("pair_coeff * * lj/cut 1.0 1.0")
-#lmp.command("pair_coeff * * yukawa 100.0 2.3")
-    #Define the potential
-    #pair_style yukawa kappa=screening_length cutoff=global_cutoff_for_Yukawa_interactions
-    # if args.pot == 'yukawa':
-    #   try:
-#lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0],args.pot_coeff[1]))
-            #default yukawa 2.0 2.5
-            #Define coeff of the interaction between different type of atoms
-            #       lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interaction 1 1 with epsilon, sigma e cutoff passed
-            
-            #     lmp.command("pair_coeff * * %s %f %f" % (args.pot,args.pot_coeff[2],args.pot_coeff[3]))
-        
-            #default yukawa 100.0 2.3
-            #except IndexError:
-            #sys.exit("IndexError: not enough coefficients for potential definition. Stopping lammps setting..program quit")
+    lmp.command("pair_coeff * * %f %f" % (args.lj_coeff[1],args.lj_coeff[2])) #interaction 1 1
 
-    # How to build neighbour build
+    # How to build neighbour list
     # This command sets parameters that affect the building of pairwise neighbor lists;
     # All atom pairs within a neighbor cutoff distance equal to the their force cutoff plus
     # the skin distance are stored in the list
@@ -102,10 +87,6 @@ def configure(args):
 
     # Define noise sample size variable equal to the total number of step to do (the +1 is because the steps are counted from 0)
     lmp.command('variable noisesamplesize equal "%i + 1"' % (args.step_number))
-
-    ###                                                                     ###
-    # TODO : alpha, stddev, leak must be set starting from cmd line arguments #
-    ###                                                                     ###
 
     # Define noise alpha
     lmp.command('variable noisealpha equal %f' % (args.noise_alpha))

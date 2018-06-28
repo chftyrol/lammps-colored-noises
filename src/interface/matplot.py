@@ -15,8 +15,8 @@ def plot(X,Y):
     plt.title('Radius of gyration of the particle system')
 
     #add x and y labels
-    plt.xlabel('Timestep')
-    plt.ylabel('Rg')
+    plt.xlabel('Timestep[t_unit]')
+    plt.ylabel('Rg[l_unit^2]')
 
     #show plot
     plt.show()
