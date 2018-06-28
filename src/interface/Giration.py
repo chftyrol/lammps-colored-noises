@@ -3,7 +3,7 @@
 import math , sys
 import numpy as np
 
-#Calcola il raggio di girazione delle particelle, dato un file di input dalla fattezza di quelli dump.ecc
+#Calcola il raggio di girazione delle particelle, dato un file di input dalla fattezza di quelli gir.ecc e ne ritorna il valore
 def compute(file):
     
     coord = np.genfromtxt(file, delimiter=" ", skip_header=9, dtype=float)
