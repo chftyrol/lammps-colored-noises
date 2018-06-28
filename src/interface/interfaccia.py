@@ -34,3 +34,13 @@ if args.final_speed == True:
             os.system('clear')
             mute.enablePrint()
         print("The speed vector has been initialized correctly")
+
+if args.dump_pos != 0:
+    pos = np.genfromtxt("dump_pos.%i" % (args.dump_pos), delimiter=" ", skip_header=9, dtype=str)
+    if args.s == True:
+        os.system('clear')
+        mute.enablePrint()
+        print("The pos vector has been initialized correctly")
+    os.system('clear')
+    print("The pos vector has been initialized correctly")
+    print(pos[0][0])

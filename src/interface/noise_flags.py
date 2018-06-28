@@ -16,7 +16,7 @@ def configure():
     parser.add_argument('--step_length', action='store', default=0.005, type=float, \
                         help='pass the timesteps\' length. Default value is 0.005 .')
                         
-    parser.add_argument('--step_number', action='store', default=100, type=int, \
+    parser.add_argument('--step_number', action='store', default=1000, type=int, \
                     help='pass the number of simulations, int with a default value of 100.')
                     
     parser.add_argument('--atom_style', choices=['angle','atomic','body','bond','charge','dipole','dpd','edpd', 'mdpd','tdpd','electron','ellipsoid','full','line','meso','molecular','peri','smd','sphere','tri','template','hybrid'], default='atomic',  \
@@ -57,6 +57,10 @@ def configure():
     parser.add_argument('--dump_speed', action='store', default=0, type=int, \
                     help='print in a file all particles\' speed components every args.dump_speed steps, an int with a default value of 99')
                     
+    parser.add_argument('--dump_pos', action='store', default=0, type=int, \
+                        help='print in a file all particles\' position components every args.dump_speed steps, an int with a default value of 99')
+                    
+                    
                     #parser.add_argument('--final_speed', action='store_true',help='stores the condition for creating a file containing the velocities of all particles at the final step of integration. (bool variable, false by default)' )
     
     parser.add_argument('--final_speed', action='store_true',help='stores the condition for creating a vector containing all final velocities: it is conditioned by --final_speed. (bool variable, false by default)')
@@ -70,11 +74,11 @@ def configure():
     parser.add_argument('--noise_stddev', action='store', default=1.0, type=float, \
                         help='Set the parameter stddev needed for the generator, a float with a default value of 1.0')
                                         
-    parser.add_argument('--noise_leak', action='store', default=1.0, type=float, \
+    parser.add_argument('--noise_leak', action='store', default=0.0, type=float, \
                         help='Set the parameter leak needed for the generator, a float with a default value of 0.0')
                     
-    parser.add_argument('--global_seed', action='store', default=7.0, type=float, \
-                        help='Set the parameter leak needed for the generator, a float with a default value of 7.0')
+    parser.add_argument('--global_seed', action='store', default=7, type=int, \
+                        help='Set the parameter leak needed for the generator, a float with a default value of 7')
     
     
     print("Arguments parsed correctly.")

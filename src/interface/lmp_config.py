@@ -60,21 +60,19 @@ def configure(args):
     # A velocity is generated using that seed.
     # This is a fast loop and the velocity assigned to a particular atom will be the same, independent of how many processors are used. However, the set of generated velocities may be more correlated than if the all or local keywords are used.
     lmp.command("velocity    all create 1.44 87287 loop geom")
+    #lmp.command("velocity    all set 0 0 0")
 
     # Define the interaction type and intensity
     lmp.command("pair_style lj/cut %f " % (args.lj_coeff[0]))
     lmp.command("pair_coeff * * %f %f" % (args.lj_coeff[1],args.lj_coeff[2])) #interaction 1 1 with epsilon, sigma e cutoff passed
-
-
-#lmp.command("pair_style python 2.5")
-    
-#lmp.command("pair_coeff * * py_pot.LJCutMelt lj")
-
+#lmp.command("pair_style hybrid/overlay lj/cut 2.5 yukawa 2.0 2.5 ")
+#lmp.command("pair_coeff * * lj/cut 1.0 1.0")
+#lmp.command("pair_coeff * * yukawa 100.0 2.3")
     #Define the potential
     #pair_style yukawa kappa=screening_length cutoff=global_cutoff_for_Yukawa_interactions
     # if args.pot == 'yukawa':
     #   try:
-    #       lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0],args.pot_coeff[1]))
+#lmp.command("pair_style hybrid/overlay lj/cut 2.5 %s %f %f " % (args.pot,args.pot_coeff[0],args.pot_coeff[1]))
             #default yukawa 2.0 2.5
             #Define coeff of the interaction between different type of atoms
             #       lmp.command("pair_coeff * * lj/cut 1.0 1.0") #interaction 1 1 with epsilon, sigma e cutoff passed
@@ -166,9 +164,12 @@ def configure(args):
     # Here saves particle speed
     if args.dump_speed != 0:
         lmp.command("dump myDump2 all custom %i dump_speed.* vx vy vz" % (args.dump_speed))
+    
+    if args.dump_pos != 0:
+        lmp.command("dump myDump3 all custom %i dump_pos.* x y z" % (args.dump_pos))
 
     if args.final_speed == True:
-        lmp.command("dump myDump3 all custom %i final_speed.* vx vy vz" % (args.step_number))
+        lmp.command("dump myDump4 all custom %i final_speed.* vx vy vz" % (args.step_number))
 
     # Clear shell
     os.system('clear')
