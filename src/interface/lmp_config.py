@@ -167,6 +167,9 @@ def configure(args):
     
     if args.dump_pos != 0:
         lmp.command("dump myDump3 all custom %i dump_pos.* x y z" % (args.dump_pos))
+    
+    if args.gir != 0:
+        lmp.command("dump myDump4 all custom %i dump_gir.* x y z" % (args.gir))
 
     if args.final_speed == True:
         lmp.command("dump myDump4 all custom %i final_speed.* vx vy vz" % (args.step_number))

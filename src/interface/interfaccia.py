@@ -8,6 +8,8 @@ import os
 import noise_flags
 import lmp_config
 import mute
+import Giration as gir
+import matplot as mat
 
 
 # Import the dynamical library from the shared object
@@ -44,3 +46,13 @@ if args.dump_pos != 0:
     os.system('clear')
     print("The pos vector has been initialized correctly")
     print(pos[0][0])
+
+if args.gir != 0:
+    X = []
+    Y = []
+    for n in range(0, int(args.step_number/args.gir)):
+        X.insert(n,int(args.gir)*n)
+        Y.insert(n,gir.compute("dump_gir.%i" % (int(args.gir)*n)))
+
+    mat.plot(X,Y)
+
