@@ -35,6 +35,8 @@ def configure(args):
     # Generate my simulation box
     lmp.command("region        sfera sphere %f %f %f %f" % (args.sphere_coord[0],args.sphere_coord[1],args.sphere_coord[2],args.sphere_coord[3]))
 
+    lmp.command("region        sferetta sphere %f %f %f %f" % (args.sphere_coord[0],args.sphere_coord[1],args.sphere_coord[2],args.sphere_coord[3]/2))
+
     lmp.command("region        scatola block %f %f %f %f %f %f" % (args.box[0],args.box[1],args.box[2],args.box[3],args.box[4],args.box[5]))
         
     # Create the box
@@ -59,7 +61,7 @@ def configure(args):
     # xyz coordinates.
     # A velocity is generated using that seed.
     # This is a fast loop and the velocity assigned to a particular atom will be the same, independent of how many processors are used. However, the set of generated velocities may be more correlated than if the all or local keywords are used.
-    lmp.command("velocity    all create 1.44 87287 loop geom")
+    lmp.command("velocity    all create 2.0 87287 loop geom")
     #lmp.command("velocity    all set 0 0 0")
 
     # Define the interaction type and intensity
@@ -149,7 +151,7 @@ def configure(args):
 
     # Add the fix addforce to the simulation.
     # It will add an impulsive force, whose values are specified by the variables set by the python function.
-    lmp.command("fix kick all addforce v_coloredkickx v_coloredkicky v_coloredkickz")
+    lmp.command("fix kick all addforce v_coloredkickx v_coloredkicky v_coloredkickz region sferetta")
     
     # For debugging purposes print any needed variable from here.
     # lmp.command('fix extra all print 1 "generator.generate = ${coloredkickz}"')

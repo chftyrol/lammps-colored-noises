@@ -24,12 +24,12 @@ def configure():
 
     parser.add_argument('--sphere_coord', action= 'append',type=float,nargs='+',default=[0, 0 , 0, 10],  help='Pass the needing for defining the spherical region in which the particles have to be created; the parameters needed are the three coordinates of the center and the radius. The default values are: 0 0 0 10')
     
-    parser.add_argument('--lj_coeff', action= 'append',type=float,nargs='+',default=[2.5,0.8,1.0],  help='Pass the needing coefficients for defining the lj potential; the parameters needed are the cutoff, epsilon, sigma. The default values are: 2.5,1.0,1.0 .')
+    parser.add_argument('--lj_coeff', action= 'append',type=float,nargs='+',default=[2.5,0.8,1.1],  help='Pass the needing coefficients for defining the lj potential; the parameters needed are the cutoff, epsilon, sigma. The default values are: 2.5,1.0,1.0 .')
     
     parser.add_argument('--mass', action='store', default=1.0, type=float, \
                         help='pass the particles\' mass value, a float with a default value of 1.0 .')
     
-    parser.add_argument('--box', action= 'append',type=float,nargs='+',default=[-100, 100 , -100, 100,-100,100],  help='Pass the needing for defining the simulation box; the parameters needed are the xlo,xhi,ylo,yhi,zlo,zhi. The default values are: -100, 100, -100, 100, -100, 100.')
+    parser.add_argument('--box', action= 'append',type=float,nargs='+',default=[-40, 40 , -40, 40,-40,40],  help='Pass the needing for defining the simulation box; the parameters needed are the xlo,xhi,ylo,yhi,zlo,zhi. The default values are: -40, 40, -40, 40, -40, 40.')
     
     parser.add_argument('--skin', action='store', default=3.0, type=float, \
                         help='pass the value of the skin distance, used in defining pairwise neighbor lists.')
@@ -64,7 +64,7 @@ def configure():
     parser.add_argument('-s', action='store_true',help='stores the condition to mute all lammps setting printout and log.lammps storing. (bool variable, false by default)')
     
     #flags for the generator
-    parser.add_argument('--noise_alpha', action='store', default=0.0, type=float, \
+    parser.add_argument('--noise_alpha', action='store', default=1.0, type=float, \
                         help='Set the parameter alpha needed for the generator, a float with a default value of 1.0')
                         
     parser.add_argument('--noise_stddev', action='store', default=1.0, type=float, \
@@ -73,8 +73,8 @@ def configure():
     parser.add_argument('--noise_leak', action='store', default=0.0, type=float, \
                         help='Set the parameter leak needed for the generator, a float with a default value of 0.0')
                     
-    parser.add_argument('--global_seed', action='store', default=7, type=int, \
-                        help='Set the parameter leak needed for the generator, a float with a default value of 7')
+    parser.add_argument('--global_seed', action='store', default=155, type=int, \
+                        help='Set the parameter leak needed for the generator, a float with a default value of 155')
     
     
     print("Arguments parsed correctly.")
