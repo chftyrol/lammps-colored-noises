@@ -18,6 +18,7 @@ def gensample(samplesize, alpha, devstd, leak, seed, dimensionlabel):
     cmd = generatorpath + " -N " + str(samplesize) + " -a " + str(alpha) + " -d " + str(devstd) + " -l " + str(leak) + " -s " + str(seed)
     print("Running generator:\n" + cmd)
     proc = subprocess.Popen(cmd, shell=True, encoding='ascii', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
     if dimensionlabel == "fx" :
         samplex = proc.communicate()[0].splitlines()
     elif dimensionlabel == "fy" :

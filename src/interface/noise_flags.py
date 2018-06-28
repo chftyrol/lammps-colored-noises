@@ -17,7 +17,7 @@ def configure():
                         help='pass the timesteps\' length. Default value is 0.005 .')
                         
     parser.add_argument('--step_number', action='store', default=5000, type=int, \
-                    help='pass the number of simulations, int with a default value of 100.')
+                    help='pass the number of simulations, int with a default value of 5000.')
                     
     parser.add_argument('--atom_style', choices=['angle','atomic','body','bond','charge','dipole','dpd','edpd', 'mdpd','tdpd','electron','ellipsoid','full','line','meso','molecular','peri','smd','sphere','tri','template','hybrid'], default='atomic',  \
                     help='pass the style of the atoms used in the simulation. Default value is \' atomic \'')
@@ -29,7 +29,7 @@ def configure():
     parser.add_argument('--mass', action='store', default=1.0, type=float, \
                         help='pass the particles\' mass value, a float with a default value of 1.0 .')
     
-    parser.add_argument('--box', action= 'append',type=float,nargs='+',default=[-100, 100 , -100, 100,-100,100],  help='Pass the needing for defining the simulation box; the parameters needed are the xlo,xhi,ylo,yhi,zlo,zhi. The default values are: -40, 40, -40, 40, -40, 40.')
+    parser.add_argument('--box', action= 'append',type=float,nargs='+',default=[-50, 50 , -50, 50,-50,50],  help='Pass the needing for defining the simulation box; the parameters needed are the xlo,xhi,ylo,yhi,zlo,zhi. The default values are: -50, 50, -50, 50, -50, 50.')
     
     parser.add_argument('--skin', action='store', default=3.0, type=float, \
                         help='pass the value of the skin distance, used in defining pairwise neighbor lists.')
@@ -64,10 +64,10 @@ def configure():
     parser.add_argument('-s', action='store_true',help='stores the condition to mute all lammps setting printout and log.lammps storing. (bool variable, false by default)')
     
     #flags for the generator
-    parser.add_argument('--noise_alpha', action='store', default=0.0, type=float, \
+    parser.add_argument('--noise_alpha', action='store', default=1.0, type=float, \
                         help='Set the parameter alpha needed for the generator, a float with a default value of 1.0')
                         
-    parser.add_argument('--noise_stddev', action='store', default=7.0, type=float, \
+    parser.add_argument('--noise_stddev', action='store', default=3.0, type=float, \
                         help='Set the parameter stddev needed for the generator, a float with a default value of 1.0')
                                         
     parser.add_argument('--noise_leak', action='store', default=0.0, type=float, \
