@@ -63,3 +63,27 @@ Si può testare il funzionamento di cntester mediante il file di dati `/testing/
 1. `cd $PERCORSO_REPO_GIT/testing`
 2. `xz -d test_data.txt.xz` (è necessario installare il pacchetto "XZ Utils" o simili)
 3. `./cntester test_data.txt 10000 4`
+
+## Interfaccia da command line
+Per istanziare la simulazione di dinamica molecolare con particelle soggette a un potenziale a due corpi di tipo Lennard-Jones e un rumore colorato esterno, si fa uso di un'interfaccia da linea di comando(src/interface).
+Lo script dell'interfaccia è `interfaccia.py`.
+
+### Dipendenze
+`interfaccia.py` fa uso delle librerie di python `argparse` , `os` e `numpy` (oltre ai moduli presenti nel progetto). Inoltre si rende necessario l'utilizzo di una versione del linguaggio **>=3.0.0**.
+Per l'installazione delle librerie, si fa riferimento al capitolo precendente.
+
+### Utilizzo
+L'interfaccia è settata con una simulazione standard, ma tramite le flags da linea di comando si possono modificare diversi paramentri. Per maggiori dettagli:
+`./interfaccia.py --help` oppure `./interfaccia.py -h`
+
+
+
+
+
+
+
+
+
+
+
+
