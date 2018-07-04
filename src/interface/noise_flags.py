@@ -76,10 +76,7 @@ def configure():
     parser.add_argument('--global_seed', action='store', default=155, type=int, \
                         help='Set the parameter leak needed for the generator, a float with a default value of 155')
     
-    
-    print("Arguments parsed correctly.")
-    
-    
+
     return parser
 
 

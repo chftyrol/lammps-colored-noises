@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import matplotlib.pyplot as plt
 
 def plot(X,Y):
@@ -9,7 +7,7 @@ def plot(X,Y):
 
     #change axes ranges
     #plt.xlim(0,1000)
-#plt.ylim(0,100)
+    #plt.ylim(0,100)
 
     #add title
     plt.title('Radius of gyration of the particle system')

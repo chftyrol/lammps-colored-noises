@@ -1,6 +1,6 @@
 from lammps import lammps
-import sys
 import os
+
 import mute
 
 
