@@ -56,4 +56,4 @@ def get_alpha(sample, n_rfpoints=100):
 	p_bounds = ([0, 0, 0], [2 ,1 ,inf])
 
 	return curve_fit(noise_ps_curve_family, f_points, p_points,\
-		bounds=p_bounds,maxfev=2000)[0][0]
+		bounds=p_bounds)[0][0]
