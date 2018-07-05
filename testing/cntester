@@ -41,6 +41,12 @@ parser.add_argument('-g', '--graphics', action='store_true',\
 parser.add_argument('-q', '--quiet', action='store_true',\
 		    help = "Run quietly, producing a parsable output")
 
+# Aggiungi flag di verbosità
+parser.add_argument('-v', '--verbose', action='store_true',\
+		    help = "Produce more verbose output (for debugging purpose.\
+		    Ineffective when present with --quiet)")
+
+
 
 # Parsa la linea di comando
 args = parser.parse_args()
@@ -53,6 +59,7 @@ sample_cardinality = args.samp_card
 samples_per_CPU = args.samp_per_CPU
 graphics = args.graphics
 quiet = args.quiet
+verbose = args.verbose
 
 
 # Calcola il numero complessivo dei dati
@@ -87,6 +94,18 @@ if not quiet:
 	else:
 		print("Graphics: Disabled")
 
+
+	if verbose:
+		print()
+		print("Current Settings:")
+		print("Data File:", data_file)
+		print("Sample Cardinality:", sample_cardinality)
+		print("Sample per CPU:", samples_per_CPU)
+		print("Graphics:", graphics)
+		print("Quiet:", quiet)
+		print("Verbose:", verbose)
+
+
 	print()
 	print("Thinking hard...")
 
@@ -104,6 +123,11 @@ for index in range(0,main_loop_iter):
 		end = data_number
 	else:
 		end = start + data_per_iter
+
+
+	if not quiet and verbose:
+		print("Loop number", index, "- Loading", end-start, "data in CPUs and processing...")
+
 
 	# Genera la lista organizzata dei dati, per questa iterazione:
 	# una lista di liste, dove ogni sottolista corrisponde ad un
@@ -141,6 +165,11 @@ for index in range(0,main_loop_iter):
 	# Appendi alla lista dei parametri alpha tutti i parametri
 	# alpha calcolati in questa iterazione
 	alphas_list.extend(iter_alphas_list)
+
+
+if not quiet and verbose:
+	print()
+	print("Calculating and printing summary...")
 
 
 # Uno spazio per rendere il tutto più ordinato
