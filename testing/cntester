@@ -12,14 +12,18 @@ parser = ArgumentParser(description="Python script to test noise\
 				     generation capabilities of\
 				     tester.x executable")
 
+
 # Aggiungi un argomento per specificare il nome del data file
 parser.add_argument("datafile", help = "a plain text file containing some\
 				samples of equal cardinality")
+
 # Aggiungi un argomento per specificare la cardinalità dei campioni
 parser.add_argument("samp_card", type=m.check_positive_int,\
 		    help = "a positive integer representing the\
 		    cardinality of samples in datafile")
+
 # Aggiungi un argomento per specificare il numero di campioni
+
 # che ogni CPU processa in media per ogni iterazione del loop principale
 parser.add_argument('samp_per_CPU', nargs='?', default=1,\
 		    type=m.check_positive_int,\
@@ -27,13 +31,20 @@ parser.add_argument('samp_per_CPU', nargs='?', default=1,\
 		    number of samples per CPU per main loop iteration\
 		    (default = 1)")
 parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.3')
+
 # Aggiungi un argomento per abilitare la grafica
 parser.add_argument('-g', '--graphics', action='store_true',\
 		    help = "Enable graphics (Produce png images of noise graph\
 		    and power spectrum)")
 
+# Aggiungi un argomento lanciare il programma in modalità silenziosa
+parser.add_argument('-q', '--quiet', action='store_true',\
+		    help = "Run quietly, producing a parsable output")
+
+
 # Parsa la linea di comando
 args = parser.parse_args()
+
 
 # Assegna gli argomenti selezionati dalla linea di comando
 # a delle variabili (per maggiore comodità).
@@ -41,6 +52,8 @@ data_file = args.datafile
 sample_cardinality = args.samp_card
 samples_per_CPU = args.samp_per_CPU
 graphics = args.graphics
+quiet = args.quiet
+
 
 # Calcola il numero complessivo dei dati
 # contando le linee del data file
@@ -52,6 +65,7 @@ data_per_iter = mp.get_data_per_iter(samples_per_CPU, sample_cardinality)
 # Calcola il numero di iterazioni del loop principale
 main_loop_iter = mp.get_main_loop_iter(data_file, data_number, data_per_iter)
 
+
 # Inizializza la lista dei valori di aspettazione e
 # delle deviazioni standard
 averages_list = []
@@ -59,21 +73,22 @@ std_devs_list = []
 alphas_list = []
 
 
-# Printa il banner di presentazione
-print("""#######################################
+if not quiet:
+	# Printa il banner di presentazione
+	print("""#######################################
 # cntester: Colored Noise Tester v0.3 #
 # by Matteo Savatteri                 #
 #######################################""")
 
 
-# Segnala se la grafica è abilitata o altrimenti
-if graphics:
-	print("Graphics: Enabled")
-else:
-	print("Graphics: Disabled")
+	# Segnala se la grafica è abilitata o altrimenti
+	if graphics:
+		print("Graphics: Enabled")
+	else:
+		print("Graphics: Disabled")
 
-print()
-print("Thinking hard...")
+	print()
+	print("Thinking hard...")
 
 
 # Avvia il loop principale
@@ -129,43 +144,79 @@ for index in range(0,main_loop_iter):
 
 
 # Uno spazio per rendere il tutto più ordinato
-print()
+if not quiet:
+	print()
+
 
 # Calcola il valore di aspettazione del  rumore
 # dalla lista dei valori di apettazione di tutti i
 # campioni
 noise_average = m.list_average(averages_list)
+
 # Stampa a standard output il valore di aspettazione del
 # rumore
-print("Noise Expectation Value:",noise_average)
+if quiet:
+	print(noise_average)
+else:
+	print("Noise Expectation Value:",noise_average)
+
 # Calcola e stampa a standard output la deviazione standard
 # del valore di aspettazione del rumore
-print("Noise Expectation Value Std. Deviation:", m.list_std_dev(averages_list,noise_average))
+
+noise_average_std = m.list_std_dev(averages_list,noise_average)
+
+if quiet:
+	print(noise_average_std)
+else:
+	print("Noise Expectation Value Std. Deviation:", noise_average_std)
+
 
 # Calcola la deviazione standard del rumore
 # dalla lista delle deviaioni standard di tutti i
 # campioni
 noise_std_dev = m.list_average(std_devs_list)
+
 # Stampa a standard output la deviazione standard del
 # rumore
-print("Noise Std. Deviation:", noise_std_dev)
+if quiet:
+	print(noise_std_dev)
+else:
+	print("Noise Std. Deviation:", noise_std_dev)
+
 # Calcola e stampa a standard output la deviazione standard
 # della deviazione standard del rumore.
-print("Noise Std. Deviation Std. Deviation:", m.list_std_dev(std_devs_list,noise_std_dev))
+noise_std_std = m.list_std_dev(std_devs_list,noise_std_dev)
+
+if quiet:
+	print(noise_std_std)
+else:
+	print("Noise Std. Deviation Std. Deviation:", noise_std_std)
+
 
 # Calcola il parametro alpha del rumore
 # dalla lista dei parametri alpha di tutti i
 # campioni
 noise_alpha = m.list_average(alphas_list)
+
 # Stampa a standard output il parametro alpha del
 # rumore
-print("Noise Alpha Parameter:", noise_alpha)
+if quiet:
+	print(noise_alpha)
+else:
+	print("Noise Alpha Parameter:", noise_alpha)
+
 # Calcola e stampa a standard output la deviazione standard
 # del parametro alpha del rumore.
-print("Noise Alpha Parameter Std. Deviation:", m.list_std_dev(alphas_list,noise_alpha))
+noise_alpha_std = m.list_std_dev(alphas_list,noise_alpha)
+
+if quiet:
+	print(noise_alpha_std)
+else:
+	print("Noise Alpha Parameter Std. Deviation:", noise_alpha_std)
+
 
 # Indica all'utente come son state salvate le immagini
-if graphics:
+if not quiet and graphics:
 	print("""
 (Colored noise plot image saved as 'cn_plot.png'
  Colored noise power spectrum plot image saved as 'cn_ps_plot.png')""")
