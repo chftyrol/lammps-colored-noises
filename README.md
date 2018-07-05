@@ -38,7 +38,7 @@ Il calcolo della funzione risposta e in generale l'algoritmo utilizzato da `Nois
 L'analisi dei rumori colorati, generati attraverso il precedente schema, è possibile grazie alo script di Python `cntester`, presente in `/testing`.
 
 ### Dipendenze
-`cntester` fa uso delle librerie di python `scipy` e `numpy` (oltre ai moduli presenti nel progetto). Inoltre si rende necessario l'utilizzo di una versione del linguaggio **>=3.0.0**.
+`cntester` fa uso delle librerie di python `scipy`, `numpy` e `matplotlib` (oltre ai moduli presenti nel progetto). Inoltre si rende necessario l'utilizzo di una versione del linguaggio **>=3.0.0**.
 
 #### Installare `scipy` e `numpy`
 Le librerie menzionate si possono installare sfruttando i seguenti metodi:
@@ -46,12 +46,14 @@ Le librerie menzionate si possono installare sfruttando i seguenti metodi:
 ##### GNU/Linux
 Scipy e numpy sono librerie di python molto conosciute, molto probabilmente si possono installare attraverso il package manager della propria distribuzione.
 
-es. (Debian based) `apt-get install python-scipy python-numpy`.
+es. (Debian based) `apt-get install python3-scipy python3-numpy python3-matplotlib`.
 
+
+**NB. è necessario installare il pacchetto python3-tk per poter utilizzare le opzioni grafiche.**
 ##### Windows e OSX
 Si faccia uso di "Pip Installs Packages" (pip):
 
-`pip install scipy numpy`.
+`pip install scipy numpy matplotlib`.
 
 ### Utilizzo
 `./cntester --help`.
@@ -62,4 +64,4 @@ Si può testare il funzionamento di cntester mediante il file di dati `/testing/
 ##### Istruzioni:
 1. `cd $PERCORSO_REPO_GIT/testing`
 2. `xz -d test_data.txt.xz` (è necessario installare il pacchetto "XZ Utils" o simili)
-3. `./cntester test_data.txt 10000 4`
+3. `./cntester test_data.txt 10000 4 -g`
