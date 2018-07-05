@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 import cn_data_manage as di
 import cn_math as m
 import cn_multiprocs as mp
+import cn_graphics as g
 
 
 # Definisci il parser
@@ -26,6 +27,9 @@ parser.add_argument('samp_per_CPU', nargs='?', default=1,\
 		    number of samples per CPU per main loop iteration\
 		    (default = 1)")
 parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.2')
+parser.add_argument('-g', '--graphics', action='store_true',\
+		    help = "Enable graphics (Produce png images of noise graph\
+		    and power spectrum)")
 
 # Parsa la linea di comando
 args = parser.parse_args()
@@ -35,6 +39,7 @@ args = parser.parse_args()
 data_file = args.datafile
 sample_cardinality = args.samp_card
 samples_per_CPU = args.samp_per_CPU
+graphics = args.graphics
 
 # Calcola il numero complessivo dei dati
 # contando le linee del data file
@@ -72,6 +77,13 @@ for index in range(0,main_loop_iter):
 	# campione di dati differente
 	samples_list = di.get_complex_data(data_file,start,end,\
 	sample_cardinality)
+
+	if index == 0 and graphics:
+		g.plot_cn(samples_list[0])
+
+		g.plot_cn_ps(m.list_power_spectrum(samples_list[0]))
+
+
 
 	# Calcola la lista dei valori di aspettazione dei campioni
 	# per questa iterazione
