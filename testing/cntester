@@ -26,7 +26,8 @@ parser.add_argument('samp_per_CPU', nargs='?', default=1,\
 		    help = "a positive integer representing the medium\
 		    number of samples per CPU per main loop iteration\
 		    (default = 1)")
-parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.2')
+parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.3')
+# Aggiungi un argomento per abilitare la grafica
 parser.add_argument('-g', '--graphics', action='store_true',\
 		    help = "Enable graphics (Produce png images of noise graph\
 		    and power spectrum)")
@@ -58,6 +59,23 @@ std_devs_list = []
 alphas_list = []
 
 
+# Printa il banner di presentazione
+print("""#######################################
+# cntester: Colored Noise Tester v0.3 #
+# by Matteo Savatteri                 #
+#######################################""")
+
+
+# Segnala se la grafica è abilitata o altrimenti
+if graphics:
+	print("Graphics: Enabled")
+else:
+	print("Graphics: Disabled")
+
+print()
+print("Thinking hard...")
+
+
 # Avvia il loop principale
 for index in range(0,main_loop_iter):
 
@@ -78,6 +96,9 @@ for index in range(0,main_loop_iter):
 	samples_list = di.get_complex_data(data_file,start,end,\
 	sample_cardinality)
 
+
+	# Se la grafica è abilitata esporta le immagini png dei grafici
+	# del rumore colorato e del suo spettro di potenza (primo campione)
 	if index == 0 and graphics:
 		g.plot_cn(samples_list[0])
 
@@ -107,6 +128,8 @@ for index in range(0,main_loop_iter):
 	alphas_list.extend(iter_alphas_list)
 
 
+# Uno spazio per rendere il tutto più ordinato
+print()
 
 # Calcola il valore di aspettazione del  rumore
 # dalla lista dei valori di apettazione di tutti i
@@ -141,3 +164,8 @@ print("Noise Alpha Parameter:", noise_alpha)
 # del parametro alpha del rumore.
 print("Noise Alpha Parameter Std. Deviation:", m.list_std_dev(alphas_list,noise_alpha))
 
+# Indica all'utente come son state salvate le immagini
+if graphics:
+	print("""
+(Colored noise plot image saved as 'cn_plot.png'
+ Colored noise power spectrum plot image saved as 'cn_ps_plot.png')""")
