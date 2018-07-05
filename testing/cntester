@@ -5,7 +5,7 @@ import cn_data_manage as di
 import cn_math as m
 import cn_multiprocs as mp
 import cn_graphics as g
-
+from sys import exit
 
 # Definisci il parser
 parser = ArgumentParser(description="Python script to test noise\
@@ -220,3 +220,26 @@ if not quiet and graphics:
 	print("""
 (Colored noise plot image saved as 'cn_plot.png'
  Colored noise power spectrum plot image saved as 'cn_ps_plot.png')""")
+
+
+
+# Thanks for playing
+if not quiet:
+
+	print("""
+Thanks for playing, see you!""")
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Esci con grazia
+exit()
