@@ -19,7 +19,7 @@ def configure(args):
     # quantities mass, sigma, epsilon, and the Boltzmann constant = 1.
     lmp.command("units        %s" % (args.units))
 
-# ATTENZIONE:mettere il comando per modificarlo direttamente, e mettere in modo per cui se non mette nulla, usa il suo valore di default per ogni unità di misura usata.
+    #setting timestep length
     lmp.command("timestep %f" % (args.step_length))
 
     # Set variables which will define my region of simulation
@@ -142,7 +142,7 @@ def configure(args):
 
     # If passed the right flag, lammps saves determined data in external files
     if args.dump_atom != 0:
-        lmp.command("dump myDump all atom %i dump_atom.*" % (args.dump_atom))
+        lmp.command("dump myDump1 all atom %i dump_atom.*" % (args.dump_atom))
 
     # Here saves particle speed
     if args.dump_speed != 0:
@@ -154,9 +154,6 @@ def configure(args):
     if args.gir != 0:
         lmp.command("dump myDump4 all custom %i dump_gir.* x y z" % (args.gir))
 
-    if args.final_speed == True:
-        lmp.command("dump myDump4 all custom %i final_speed.* vx vy vz" % (args.step_number))
-
     # Clear shell
     os.system('clear')
     
@@ -166,6 +163,8 @@ def configure(args):
     print("\n")
     
     print("*) The units used by simulation are: " + str(args.units) + " .")
+
+    print("*) The length of the timesteps for this simulations is : " + str(args.step_length) + " .")
 
     print("*) The number of timesteps for this simulations is : " + str(args.step_number) + " .")
 
@@ -179,9 +178,9 @@ def configure(args):
 
     print("*) The particles are set to have a mass equal to " + str(args.mass) + ".")
 
-    print("*) Velocities are set randomly.")
+    print("*) Velocities are set to be random initially.")
 
-    print("*) Lj potential between particles is set with epsilon=1.0, sigma=1.0, cutoff=2.5 .")
+    print("*) Lj potential between particles is set with cutoff = " + str(args.lj_coeff[0]) + " ,epsilon = " + str(args.lj_coeff[1]) + ", sigma = " + str(args.lj_coeff[2]) + " .")
 
     print("*) The neighbor list has been built by binning and with a skin distance of " + str(args.skin) + " .")
 
@@ -190,6 +189,10 @@ def configure(args):
     print("*) It will be performed a constant NVE (Particles' number, Volume,Energy) integration to update position and velocity for atoms each timestep.")
 
     print("*) Lammps will print the thermodynamics of the system every " + str(args.thermo) + " steps.")
+
+    print("*) The noise is set to have alpha =  " + str(args.noise_alpha) + " and stddev = " + str(args.noise_stddev) + " .")
+
+
     
     if args.s == False:
         print("\n")

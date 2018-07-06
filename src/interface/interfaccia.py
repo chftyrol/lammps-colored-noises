@@ -29,13 +29,12 @@ lmp = lmp_config.configure(args)
 lmp.command("run       %i" % (args.step_number))
 
 # Postprocessing analysis
-if args.final_speed == True:
-        speed = np.genfromtxt("final_speed.%i" % (args.step_number), delimiter=" ", skip_header=9, dtype=float)
 
-
+#generate a vector for possible analysis
 if args.dump_pos != 0:
     pos = np.genfromtxt("dump_pos.%i" % (args.dump_pos), delimiter=" ", skip_header=9, dtype=float)
 
+#generate vectors for radius of gyration plotting
 if args.gir != 0:
     X = []
     Y = []

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+#given two vectors for axes coordinates, generates a scatterplot
 def plot(X,Y):
 
     #scatter plot
