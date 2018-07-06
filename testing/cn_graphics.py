@@ -27,4 +27,4 @@ def plot_cn_ps(ps_noise_sample, n=100):
 	(first n frequencies) and export a png image"
 
 	plot_list_limited(ps_noise_sample, n, "Frequency (p.n.)", "Volume (p.n.)", \
-	"Colore Noise Power Spectrum", "cn_ps_plot.png")
+	"Colored Noise Power Spectrum", "cn_ps_plot.png")
