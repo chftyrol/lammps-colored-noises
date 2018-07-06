@@ -19,12 +19,12 @@ def plot_list_limited(list, n=100, xlabel="", ylabel="", title="", plot_im_name=
 def plot_cn(noise_sample, n=100):
 	"Plot the graph of a colored noise (n step) and export a png image"
 
-	plot_list_limited(noise_sample, n, "Step", "Volume", "Colored Noise", "cn_plot.png")
+	plot_list_limited(noise_sample, n, "Step (p.n.)", "Volume (p.n.)", "Colored Noise", "cn_plot.png")
 
 
 def plot_cn_ps(ps_noise_sample, n=100):
 	"Plot the graph of the power spectrum of a colored noise\
 	(first n frequencies) and export a png image"
 
-	plot_list_limited(ps_noise_sample, n, "Frequency", "Volume", \
+	plot_list_limited(ps_noise_sample, n, "Frequency (p.n.)", "Volume (p.n.)", \
 	"Colore Noise Power Spectrum", "cn_ps_plot.png")

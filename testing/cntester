@@ -126,7 +126,7 @@ for index in range(0,main_loop_iter):
 
 
 	if not quiet and verbose:
-		print("Loop number", index, "- Loading", end-start, "data in CPUs and processing...")
+		print("Loop number", index+1, "- Loading", end-start, "data in CPUs and processing...")
 
 
 	# Genera la lista organizzata dei dati, per questa iterazione:
