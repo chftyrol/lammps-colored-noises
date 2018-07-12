@@ -18,13 +18,13 @@ def gensample(samplesize, alpha, devstd, leak, seed, dimensionlabel):
     cmd = generatorpath + " -N " + str(samplesize) + " -a " + str(alpha) + " -d " + str(devstd) + " -l " + str(leak) + " -s " + str(seed)
     print("Running generator:\n" + cmd)
     proc = subprocess.Popen(cmd, shell=True, encoding='ascii', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    proc.wait()
+
     if dimensionlabel == "fx" :
-        samplex = proc.stdout
+        samplex = proc.communicate()[0].splitlines()
     elif dimensionlabel == "fy" :
-        sampley = proc.stdout
+        sampley = proc.communicate()[0].splitlines()
     elif dimensionlabel == "fz" :
-        samplez = proc.stdout
+        samplez = proc.communicate()[0].splitlines()
 
 def generatex(nstep, noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed):
     global nlaststepx, lastvaluex
@@ -37,7 +37,7 @@ def generatex(nstep, noisesamplesize, noisealpha, noisedevstd, noiseleak, noises
         gensample(noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed, "fx")
 
     nlaststepx = nstep
-    value = float(samplex.readline())
+    value = float(samplex[nstep])
     lastvaluex = value
     return value
 
@@ -52,7 +52,7 @@ def generatey(nstep, noisesamplesize, noisealpha, noisedevstd, noiseleak, noises
         gensample(noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed, "fy")
 
     nlaststepy = nstep
-    value = float(sampley.readline())
+    value = float(sampley[nstep])
     lastvaluey = value
     return value
 
@@ -67,6 +67,6 @@ def generatez(nstep, noisesamplesize, noisealpha, noisedevstd, noiseleak, noises
         gensample(noisesamplesize, noisealpha, noisedevstd, noiseleak, noiseseed, "fz")
 
     nlaststepz = nstep
-    value = float(samplez.readline())
+    value = float(samplez[nstep])
     lastvaluez = value
     return value

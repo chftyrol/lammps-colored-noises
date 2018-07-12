@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-
 import matplotlib.pyplot as plt
 
+#given two vectors for axes coordinates, generates a scatterplot
 def plot(X,Y):
 
     #scatter plot
@@ -9,14 +8,14 @@ def plot(X,Y):
 
     #change axes ranges
     #plt.xlim(0,1000)
-#plt.ylim(0,100)
+    #plt.ylim(0,100)
 
     #add title
     plt.title('Radius of gyration of the particle system')
 
     #add x and y labels
-    plt.xlabel('Timestep')
-    plt.ylabel('Rg')
+    plt.xlabel('Timestep[t_unit]')
+    plt.ylabel('Rg[l_unit^2]')
 
     #show plot
     plt.show()
